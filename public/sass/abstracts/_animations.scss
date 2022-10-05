@@ -1,0 +1,31 @@
+
+@keyframes float {
+	0% {
+		transform: translatey(0px);
+	}
+	50% {
+		transform: translatey(-20px);
+	}
+
+    100% {
+		transform: translatey(0px);
+	}
+}
+
+@keyframes showAlertLeft {
+	0% {
+		transform: translateX(100%);
+	}
+	10% {
+		transform: translateX(0);
+	}
+	90% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(100%);
+	}
+}
+
+
+

@@ -1,0 +1,30 @@
+.alert {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    z-index: 99999;
+    display: inline-block;
+    padding: 1rem;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.5rem;
+    width: 40rem;
+    transform: translateX(40rem);
+    visibility: hidden;
+    // animation: showAlertLeft 8s ease-in-out;
+
+
+
+}
+
+.danger-alert {
+  background-color: #f7a7a3;
+  border-left: 5px solid #8f130c;
+}
+
+
+.alert > * {
+
+  width: 100%;
+  padding: 5px;
+  border-radius: 5px;
+}

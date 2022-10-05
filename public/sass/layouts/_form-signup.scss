@@ -1,0 +1,96 @@
+.signup__container {
+    @include center();
+
+    position: relative;
+    width: 40%;
+    background-color: rgba($color-black, .4);
+    border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.6);
+    box-shadow: 0 0 40px rgba($color-black, .7);
+    padding: 5rem 3.5rem;
+    color: $color-white;
+    transform: translate(-50%, -50%) scale(1);
+    transition: all .5s;
+    min-height: 40rem;
+}
+
+
+
+.form {
+    &__input {
+        font-family: 'Montserrat', sans-serif;
+        color: inherit;
+        font-size: 2rem;
+        padding: 1.5rem 2rem;
+        border-radius: 2px;
+        background-color: rgba(255, 255, 255, 0.5);
+        border: none;
+        border-bottom: 3px solid transparent;
+        width: 100%;
+        display: inline-block;
+        transition: all .3s;
+        margin-top: 3rem;
+    }
+    &__input:focus {
+        outline: none;
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1);
+        border-bottom: 3px solid $color-login ;
+    }
+    &__input:focus:invalid {
+        border-bottom: 3px solid $color-danger; 
+    }
+
+    &__label {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 2rem;
+        font-weight: 300;
+        margin-left: 2rem;
+        margin-top: .7rem;
+        display: block;
+        transform: translateY(-10rem);
+        transition: all .3s;
+    }
+
+    &__input:placeholder-shown + &__label {
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-4rem); }
+
+    &__link:link, &__link:visited {
+        color: $color-danger;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 1.5rem;
+        font-weight: 300;
+        font-family: 'Montserrat', sans-serif;
+        margin-bottom: 2rem;
+    }
+    &__link:hover, &__link:active {
+        text-decoration: underline;
+    }
+
+    &__login-btn, &__login-btn:visited, &__login-btn:link {
+        float: right;
+        font-family: 'Montserrat', sans-serif;
+        text-transform: uppercase;
+        text-decoration: none;
+        padding: 2rem 3rem;
+        font-size: 2rem;
+        border: none;
+        color: $color-white;
+        border-radius: 5px;
+        background-color: $color-login;
+        cursor: pointer; 
+        transition: all .1s;
+    }
+    &__login-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); 
+    }
+    &__login-btn:active {
+        transform: translateY(-1px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1); 
+    }
+
+}
+

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,300;0,500;0,700;0,900;1,300;1,500;1,700;1,900&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="shortcut icon" type="image/png" href="./img/Saly-1.png">
+
+    <title>EasyAuth | Authentication & Authorization</title>
+</head>
+<body>
+
+    <main>
+        <div class="alert-box" >
+            <div class="alert danger-alert" id="alert">
+ 
+            </div>
+        </div>
+
+        <div class="landingPage">
+            <div class="row">
+                <div class="col-1-of-2">
+                    <div class="form-container">
+                        <div class="form">
+                            <div class="form__content">
+                                <h2 class="heading-secondary u-mb-m">
+                                    Your new account is a few clicks away! Join us Today. 
+                                </h2>
+                                <form class="signup" action="" method="">
+                                    <input type="hidden" name="signupBtn" value="signup"/>
+                                    <button class="signup-pop-btn" id="signupPopupBtn" type="submit">Signup</button>
+                                </form>
+
+                                <div class="seperator-container">
+                                    <p class="line-seperator">or</p>
+                                </div>
+
+                                <form class="login" action="" method="">
+                                    <input type="hidden" name="loginBtn" value="login"/>
+                                    <button class="login-pop-btn" id="loginPopupBtn" type="submit">Login</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2-of-2">
+                    <div class="landingPage__description">
+                        
+                        <div class="landingPage__heading">
+                            <div class="heading-container u-center u-text-center">
+                                <h1 class="heading-primary">
+                                    Welcome to <br><span class="u-inline-block u-color-primary u-underline u-ls-m">EasyAuth</span>
+                                </h1>
+                            </div>
+                        </div>
+                        <div class="landingPage__image u-float">
+                            <img src="./img/Saly-1.png" alt="EasyAuth">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="popupLogin" class="popup-login">
+        <!-- Filled using AJAX call  -->
+    </div>
+
+
+    <div id="popupSignup" class="popup-signup">
+        <!-- Filled using AJAX call -->
+    </div>
+
+
+    <script src="./js/loginForm.js">
+    </script>
+    <script src="./js/signupForm.js">
+    </script>
+
+    
+
+</body>
+</html>

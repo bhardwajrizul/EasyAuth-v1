@@ -1,0 +1,123 @@
+.form-container {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    .form {
+        width: 60%;
+        @include center();
+
+        .form__content {
+            background-color: $color-white;
+            width: 100%;
+            border-radius: 3rem;
+            padding: 6rem 3.5rem 4rem;
+
+        }
+    }
+}
+
+.login, .signup {
+    margin: 2rem 0;
+}
+
+.login-pop-btn, .login-pop-btn:visited, .login-pop-btn:link,
+.signup-pop-btn, .signup-pop-btn:visited, .signup-pop-btn:link  {
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 1.5rem 4rem;
+    display: inline-block;
+    border-radius: 10rem;
+    transition: all .2s;
+    position: relative;
+    font-family: inherit;
+    font-size: 2rem;
+    border: none;
+    color: $color-white;
+    cursor: pointer; 
+    width: 100%;
+}
+
+.signup-pop-btn, .signup-pop-btn:visited, .signup-pop-btn:link {
+    background-color: $color-signup;
+}
+
+.login-pop-btn, .login-pop-btn:visited, .login-pop-btn:link {
+    background-color: $color-login;
+}
+
+.login-pop-btn:hover, .signup-pop-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); 
+}
+.login-pop-btn:hover::after,
+.signup-pop-btn:hover::after {
+    transform: scaleX(1.4) scaleY(1.6);
+    opacity: 0; 
+}
+
+.login-pop-btn::after,
+.signup-pop-btn::after {
+    content: "";
+    display: inline-block;
+    height: 100%;
+    width: 100%;
+    border-radius: 10rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    transition: all .4s; 
+}
+
+.login-pop-btn::after {
+    background-color: $color-login;
+}
+
+
+.signup-pop-btn::after {
+    background-color: $color-signup;
+}
+
+.login-pop-btn:active, .login-pop-btn:focus,
+.signup-pop-btn:active, .signup-pop-btn:focus {
+    outline: none;
+    transform: translateY(-1px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2); 
+}
+
+
+.seperator-container {
+    position: relative;
+    margin: 3rem 0;
+}
+
+
+.line-seperator {
+    font-size: 2rem;
+    font-family: inherit;
+    font-weight: 300;
+    width: 100%;
+    text-align: center;
+}
+
+.line-seperator::before {
+    content: "";
+    width: 45%;
+    display: inline-block;
+    border-bottom: 2px solid rgba($color-black, .1);
+    position: absolute;
+    top: 50%;
+    left: 0%;
+}
+
+.line-seperator::after {
+    content: "";
+    width: 45%;
+    display: inline-block;
+    border-bottom: 2px solid rgba($color-black, .1);
+    position: absolute;
+    top: 50%;
+    right: 0%;
+
+}

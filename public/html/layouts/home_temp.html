@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,300;0,500;0,700;0,900;1,300;1,500;1,700;1,900&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="shortcut icon" type="image/png" href="../../img/Saly-1.png">
+    <title>Home | Easyauth</title>
+</head>
+<body>
+    <div class="homepage">
+        <button class="btn u-bg-color-danger" id="logoutBtn"> Logout <span class="u-fs-s u-lower">{%USER_EMAIL%}</span> </button>
+        <button class="btn u-bg-color-signup" id="goBackBtn"> Go Back </button>
+
+        <div class="row">
+            <div class="col-1-of-3">
+
+                <div class="display">
+                    <div class="display__container">
+                        &nbsp;
+                        <img src='../../img/Saly-11.png' alt="Welcome Image">
+                    </div>
+                </div>
+ 
+            </div>
+            <div class="col-2-of-3">
+                <div class="content-box">
+                    &nbsp;
+                    <div class="content">
+                        <div class="content__heading u-mb-l">        
+                            <h1 id="userName" class="heading-secondary u-text-center u-mb-m u-fs-m u-fw-700 u-color-white u-text-shadow-1">  Hello, {%USER_NAME%}</h1>
+                            <h2 id="underlineStuff" class="heading-secondary u-inline u-fs-m u-mb-m u-ls-0">   This will be your personal homepage</h2>
+                            <h2 class="heading-secondary u-mt-m u-fs-m u-ls-0"> This service can be extended for <span class="auto-type"> </span></h2>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="col-3-of-3">
+                <div class="display">
+                    <div class="display__container">
+                        &nbsp;
+                        <img class="img-bottom-clip" src='../../img/Saly-22.png' alt="Welcome Image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src='https://cdn.jsdelivr.net/npm/typed.js@2.0.12'></script>
+    <script src='../../js/typer.js'></script>
+    <script type='module' src='../../js/rough-stuff.js'></script>
+    <script src="../../js/home.js"></script>
+
+</body>
+</html>

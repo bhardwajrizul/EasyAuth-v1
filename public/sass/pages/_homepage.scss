@@ -1,0 +1,70 @@
+.homepage {
+
+    background-image: linear-gradient(to right top, #f2edf4, #ebe4f3, #e1dbf4, #d4d3f5, #c4ccf6, #bbcff9, #b2d3fa, #aad6fa, #b3e1f9, #c2ecf8, #d5f5f9, #e9fdfc);
+
+    width: 100vw;
+    min-height: 100vh;
+    overflow: hidden;
+
+    .btn, .btn:visited, .btn:link {
+        float: right;
+        font-family: 'Montserrat', sans-serif;
+        text-transform: uppercase;
+        text-decoration: none;
+        padding: 2rem 3rem;
+        margin: 2.5rem 5rem 0 0;
+        font-size: 2rem;
+        border: none;
+        color: $color-white;
+        border-radius: 30px;
+        cursor: pointer; 
+        transition: all .1s;
+        z-index: 9999;
+    }   
+    .btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); 
+    }
+    .btn:active {
+        transform: translateY(-1px);
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.1); 
+    }
+
+}
+
+
+.display {
+    width: 100%;
+    
+    &__container {
+        position: relative;
+        width: 100%;
+        height: 100vh;
+    }
+
+    &__container > img {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+    }
+}
+
+.content-box {
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+}
+
+.content {
+    margin-top: 13rem;
+
+
+    &__heading {
+        background-color: $color-primary;
+        padding: 8rem 3rem;
+        border-radius: 30px;
+        box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.2); 
+        hyphens: auto;
+    }
+
+}

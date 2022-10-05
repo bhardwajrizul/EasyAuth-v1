@@ -1,0 +1,22 @@
+<div class="signup__container" id="signupContainer">
+    <div class="signup-form">
+        <form class="form" action="" method="">
+            <h2 class="heading-secondary u-ls-0 u-color-white u-lh-s u-mb-s">
+                Create your account
+            </h2>
+
+            <input class="form__input" id="emailInput" type="email" name="email" placeholder="Email Address" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$">
+            <label class="form__label" for="emailInput">Email Address</label>
+            <input class="form__input" id="passInput" type="password" name="password" placeholder="Password" required min="8" max="15">
+            <label class="form__label" for="passInput">Password</label>
+            <input class="form__input" id="passConfirmInput" type="password" name="passwordConfirm" placeholder="Confirm Password" required min="8" max="15">
+            <label class="form__label" for="passConfirmInput">Confirm Password</label>
+            <button class="form__btn u-bg-color-signup" id="nextSignUpBtn" type="submit">Next</button>
+            <p class="heading-teritary">
+                Aready registered?
+                <a class="form__link u-color-login u-block" href="">Login to your account</a>
+            </p>
+            <button class="close-btn" id="closeSignupBtn" type="submit">&times;</button>
+        </form>
+    </div>
+</div>

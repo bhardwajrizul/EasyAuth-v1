@@ -1,0 +1,44 @@
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+:root {
+    font-size: 62.5%;
+}
+
+body {
+    position: relative;
+    box-sizing: border-box;
+    overflow-x: hidden;
+}
+
+.heading-primary {
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    font-weight: 900;
+    color: $color-white;
+    font-size: 4.5rem;
+    letter-spacing: .2rem;
+    text-shadow: 2px 3px 0px #898999;
+}
+
+.heading-secondary {
+    font-family: 'Montserrat', sans-serif;
+    color: $color-black;
+    font-weight: 500;
+    font-size: 3.8rem;
+    line-height: 1.25;
+    letter-spacing: 2px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.heading-teritary {
+    font-family: 'Montserrat', sans-serif;
+    color: $color-white;
+    font-weight: 500;
+    font-size: 1.5rem;
+}

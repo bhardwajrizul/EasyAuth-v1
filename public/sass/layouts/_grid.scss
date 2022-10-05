@@ -1,0 +1,31 @@
+.row {
+    max-width: $grid-width;
+    margin: 0 auto;
+
+    @include clearfix();
+
+    [class^="col-"] {
+        float: left;
+    }
+
+    .col-1-of-2 {
+        width: calc(55%);
+    }
+
+    .col-2-of-2 {
+        width: calc(45%);
+    }
+
+    .col-1-of-3 {
+        width: calc(33.3%);
+    }
+
+    .col-2-of-3 {
+        width: calc(33.3%);
+    }
+
+    .col-3-of-3 {
+        width: calc(33.3%);
+    }
+
+}

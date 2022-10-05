@@ -1,0 +1,131 @@
+.u-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.u-fw-900 {
+    font-weight: 900 !important;
+}
+
+
+.u-fw-700 {
+    font-weight: 700 !important;
+}
+
+.u-fs-bullet {
+    font-size: 2.5rem !important;
+}
+
+.u-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+.u-text-center {
+    text-align: center;
+}
+
+.u-inline {
+    display: inline;
+}
+
+.u-inline-block {
+    display: inline-block;
+}
+.u-block {
+    display: block !important;
+}
+
+.u-color-login {
+    color: $color-login !important;
+}
+
+.u-bg-color-login {
+    background-color: $color-login !important;
+}
+
+.u-color-signup {
+    color: $color-signup !important;
+}
+
+.u-bg-color-signup {
+    background-color: $color-signup !important;
+}
+
+.u-color-white {
+    color: $color-white !important;
+}
+
+.u-bg-color-danger {
+    background-color: $color-danger !important;
+}
+
+.u-ls-m {
+    letter-spacing: 1rem;
+}
+
+.u-ls-0 {
+    letter-spacing: 0px;
+}
+
+.u-lh-s {
+    line-height: 3.2rem;
+}
+
+.u-mb-m {
+    margin-bottom: 7rem;
+}
+
+.u-mb-l {
+    margin-bottom: 10rem;
+}
+
+.u-mt-s {
+    margin-top: 3rem;
+}
+
+.u-mt-m {
+    margin-top: 7rem;
+}
+
+.u-mb-s {
+    margin-bottom: 3rem;
+}
+
+.u-fs-m {
+    font-size: 3rem !important;
+}
+
+.u-fs-s {
+    font-size: 2rem !important;
+}
+
+.u-text-shadow-1 {
+    text-shadow: 1px 1px 1px $color-black;
+}
+
+.u-underline {
+  background-image: linear-gradient(120deg, #c4fcef 0%, #8fd3f4 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 0.2em;
+  background-position: 0 88%;
+  transition: background-size 0.25s ease-in;
+  border-radius: 4px;
+  &:hover {
+    background-size: 100% 88%;
+  }
+}
+
+.img-bottom-clip {
+    transform: translate(-2rem, -8rem);
+
+}
+
+.auto-type {
+    color: $color-login;
+}
+
+.u-lower {
+    text-transform: lowercase !important;
+}
