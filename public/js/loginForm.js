@@ -15,7 +15,7 @@ function loadLoginForm(e) {
     xhttp.onprogress = () => {
         loginForm.style.visibility = 'visible';
         loginForm.style.opacity = 1;
-        loginForm.innerHTML = '<h1>loading...</h1>';
+        loginForm.innerHTML = '<div class="loader"></div>';
     }
 
     xhttp.onload = function() {
@@ -33,7 +33,7 @@ function validateLogin(loginFormHTML) {
     xhttp.onprogress = () => {
         loginForm.style.visibility = 'visible';
         loginForm.style.opacity = 1;
-        loginForm.innerHTML = '<h1>loading...</h1>';
+        loginForm.innerHTML = '<div class="loader"></div>';
     }
     xhttp.onload = function() {
         let data = JSON.parse(this.response);
@@ -82,7 +82,7 @@ function getHomePageviaLogin(loginFormHTML) {
     xhttp.onprogress = () => {
         loginForm.style.visibility = 'visible';
         loginForm.style.opacity = 1;
-        loginForm.innerHTML = '<h1>loading...</h1>';
+        loginForm.innerHTML = '<div class="loader"></div>';
     }
     xhttp.onload = function() {
             

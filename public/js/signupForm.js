@@ -20,7 +20,7 @@ function loadSignupPopup(e) {
     xhttp.onprogress = function() {
         signupForm.style.visibility = 'visible';
         signupForm.style.opacity = 1;
-        signupForm.innerHTML = '<h1>loading...</h1>';
+        signupForm.innerHTML = '<div class="loader"></div>';
     }
     
     xhttp.onload = function() {
@@ -74,7 +74,7 @@ async function nextBtnClicked(e) {
 
         xhttp.open('GET', '/signupConfirm', true);
         xhttp.onprogress = function() {
-            signupForm.innerHTML = 'loading...';
+            signupForm.innerHTML = '<div class="loader"></div>';
         }
     
         xhttp.onload = function() {
@@ -141,7 +141,7 @@ function loadPrevPage(e) {
     xhttp.open('GET', '/signup', true);
 
     xhttp.onprogress = function() {
-        signupForm.innerHTML = '<h1>loading...</h1>';
+        signupForm.innerHTML = '<div class="loader"></div>';
     }
 
     xhttp.onload = function() {
@@ -208,7 +208,7 @@ function getHomePage() {
 
     xhttp.open('GET', '/homepage');
     xhttp.onprogress = function() {
-        signupForm.innerHTML = 'loading...';
+        signupForm.innerHTML = '<div class="loader"></div>';
     }
     xhttp.onload =  function() {
         console.log(this.response);

@@ -230,6 +230,31 @@ body {
   padding: 5px;
   border-radius: 5px; }
 
+.loader {
+  margin: 25rem auto;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  width: 75px;
+  height: 75px;
+  animation: spinner 1s linear infinite; }
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+    border-top: 4px solid #ff4130; }
+  25% {
+    transform: rotate(90deg);
+    border-top: 4px solid #ff4130; }
+  50% {
+    transform: rotate(180deg);
+    border-top: 4px solid #ff4130; }
+  75% {
+    transform: rotate(270deg);
+    border-top: 4px solid #ff4130; }
+  100% {
+    transform: rotate(360deg);
+    border-top: 4px solid #ff4130; } }
+
 .row {
   max-width: 100%;
   margin: 0 auto; }

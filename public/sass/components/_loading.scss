@@ -1,0 +1,38 @@
+.loader {
+    margin: 25rem auto;
+    border: 3px solid $color-white;
+    border-radius: 50%;
+
+    width: 75px;
+    height: 75px;
+    animation: spinner 1s linear infinite;
+  }
+  
+  @keyframes spinner {
+    0% { 
+      transform: rotate(0deg); 
+      border-top: 4px solid $color-danger;
+
+
+    }
+    25%{
+      transform: rotate(90deg); 
+      border-top: 4px solid $color-danger;
+
+    }
+    50% {
+      transform: rotate(180deg); 
+      border-top: 4px solid $color-danger;
+
+    }
+    75%{
+      transform: rotate(270deg); 
+
+      border-top: 4px solid $color-danger;
+    }
+    100% { 
+      transform: rotate(360deg); 
+      border-top: 4px solid $color-danger;
+
+    }
+  }

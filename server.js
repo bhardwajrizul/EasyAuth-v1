@@ -25,17 +25,11 @@ const { prependOnceListener } = require('process');
 // Establishing DB Connection
 main().then(() => {
   console.log("DB Connection Successful!")
-}).catch(err => console.log(err));
+}).catch(err => console.log("DB ERROR : ", err));
 
 async function main() {
   await mongoose.connect(process.env.DB_MONGOOSE); 
 }
-
-async function insertADoc() {
-  await userModel.create({email: "abc@email.com", password: "123123123", passwordConfirm: "123123123", name: "Rizul"});
-  
-}
-// insertADoc();
 
 // host and port of our local server
 const host = '127.0.0.1';
@@ -51,24 +45,20 @@ let alert = '';
 
 
 
-// creating a http server that handles a request and sends back a response in a callback
+// creating a http server that handles a request and sends 
+// back a response in a callback
 const server = http.createServer(async (req, res) => {
   // console.log("{URL:::", req.url, " ------ ", "METHOD:::", req.method, "}\n");
 
-///
-/// HANDLING GET REQUESTS
-///
-  if (req.method == 'GET') {
 
+/// HANDLING GET REQUESTS
+  if (req.method == 'GET') {
     // if request is made at the root '/' route 
     if(req.url === '/') {
-
-
       // Create a suitable index.html file path NOTE*(index.html must always be in the root directory of static (public) folder)
       const HTML = path.join(__dirname, '/public/index.html');
       // create a Read Stream and pipe the response to it
       const HTMLStream = fs.createReadStream(HTML, 'utf-8');
-
       // This will wait until we know the readable stream is actually valid before piping
       HTMLStream.on('open', () => {
         // This just pipes the read stream to the response object (which goes to the client)
@@ -162,10 +152,9 @@ const server = http.createServer(async (req, res) => {
 
     }
 
-    
+    // If signup button is clicked
+    // an AJAX GET req is sent to /signup route
     else if (req.url === '/signup') {
-      
-
       fs.readFile(path.join(__dirname, './public/html/components/signup_1.html'), (err, data) => {
           if(err) {
             res.writeHead(404, {'Content-Type' : 'text/html'})
@@ -179,8 +168,6 @@ const server = http.createServer(async (req, res) => {
 
 
     else if (req.url == '/signupConfirm') {
-
-
       let dataValid = {
         confirm:false,
         data:''
@@ -263,32 +250,26 @@ const server = http.createServer(async (req, res) => {
         data: ''
       }
 
-
+      // THERE IS AN ALERT PRESENT
       if(getLengthAlert(alert) > 0) {
         dataValid.confirm = false;
         dataValid.data = alert;
         res.writeHead(200, {'Content-Type' : 'text/html'});
         res.end(JSON.stringify(dataValid));
       } 
-      
+      // THERE IS NO ALERT
       else if (getLengthAlert(alert) == 0) {
 
         let cookies = new Cookies(req, res, { keys: [process.env.COOKIE_KEYS] });
         let token = cookies.get(process.env.COOKIE_NAME);
-        console.log("TOKEN:", token);
 
         if (token) {
           jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
-            if (!err) {
-  
-              console.log("decoded homepage : ",decoded);
-              
+            if (!err) { 
               let email = decoded.userEmail;
-
               userModel.find({email}, (err, docs) => {
                 if (!err && docs.length > 0) {
                   let user = docs[0];
-
                   fs.readFile(path.join(__dirname, './public/html/layouts/home_temp.html'), (err, data) => {
                     if(err) {
                       alert += '<p>404 Not Found!</p>';
@@ -297,7 +278,6 @@ const server = http.createServer(async (req, res) => {
                       res.writeHead(404, {'Content-Type' : 'text/html'});
                       res.end(JSON.stringify(dataValid));
                     } else {
-
                       let userHTML = replaceTemplate(data.toString(), {
                         userEmail : user.email,
                         userName : user.name
@@ -329,22 +309,24 @@ const server = http.createServer(async (req, res) => {
 
     }
 
-    /// if no file is found then send a suitable response
+    else if (req.url == '/forgot') {
+      res.writeHead(404, {"Content-Type": "text/html"});
+      res.end("This service is not functional yet. Please Navigate back!")
+    }
+
+    /// for unhandeled route  send a suitable response
     else{
     // set the response to type to be text
     res.writeHead(404, {"Content-Type": "text/html"});
     // end the respose with text
-    res.end("No Page Found");
+    res.end("404 \n Invalid request");
     }
   }
 
-///
+
 /// HANDLING POST REQUESTS
   else if (req.method === 'POST') {  
-    ///
-    // console.log("{ \n URL:::", req.url, "\n", "METHOD:::", req.method, "\n}");
-    
-    
+        
     if (req.url == '/signupConfirm') {
 
       
@@ -383,7 +365,6 @@ const server = http.createServer(async (req, res) => {
 
       })   
     }
-    ///
     
     else if (req.url == '/signupComplete') {
       
@@ -432,7 +413,7 @@ const server = http.createServer(async (req, res) => {
 
       })
     }
-    ///
+
     else if (req.url == '/loginData') {
       alert = '';
       let data = '';
@@ -442,11 +423,8 @@ const server = http.createServer(async (req, res) => {
       req.on('end', () => {
 
         let dataJSON = JSON.parse(data);
-
-        
         let email = dataJSON.emailInput.trim().toLowerCase();
         let password = dataJSON.passInput;
-        console.log(dataJSON);
 
         if (email == '') {
           alert += '<p>&bull; Enter an email address!</p>';
@@ -462,7 +440,6 @@ const server = http.createServer(async (req, res) => {
           userModel.find({email},async (err, docs) => {
             if(!err && docs.length > 0) {
               let user = docs[0];
-              console.log(password);
               let compare = await bcrypt.compare(password, user.password);
               
               if (compare) {
@@ -501,12 +478,9 @@ const server = http.createServer(async (req, res) => {
     ///
 
   }
-/// FINISH HANDLING POST REQUESTS
-///
 
-///
-/// HANDLING UNKNOWN REQUESTS
-///
+  
+/// HANDLING UNKNOWN REQUESTS (PUT POST PATCH)
   else {
     res.writeHead(400, {'Content-Type': 'text/plain'});
     res.end("Unsupported Request");
