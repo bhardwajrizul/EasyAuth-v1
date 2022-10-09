@@ -1,8 +1,7 @@
 # EASYAUTH
 ## _Authentcation and Authorization_
 
-
-  https://easyauth.onrender.com/
+  Webiste live at https://easyauth.onrender.com/
 
 [![Website easyauth.onrender.com](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://easyauth.onrender.com/)
 
