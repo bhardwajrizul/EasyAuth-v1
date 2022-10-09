@@ -26,10 +26,14 @@
 :root {
   font-size: 62.5%; }
 
+html {
+  overflow-x: hidden; }
+
 body {
   position: relative;
   box-sizing: border-box;
-  overflow-x: hidden; }
+  overflow-x: hidden;
+  width: 100vw; }
 
 .heading-primary {
   font-family: 'Montserrat', sans-serif;
@@ -220,6 +224,9 @@ body {
   width: 40rem;
   transform: translateX(40rem);
   visibility: hidden; }
+  @media only screen and (max-width: 600px) {
+    .alert {
+      width: 30rem; } }
 
 .danger-alert {
   background-color: #f7a7a3;
@@ -274,6 +281,22 @@ body {
     width: calc(33.3%); }
   .row .col-3-of-3 {
     width: calc(33.3%); }
+  @media only screen and (max-width: 1000px) {
+    .row .col-1-of-2 {
+      width: calc(100vw); }
+    .row .col-2-of-2 {
+      width: calc(100vw); } }
+  @media only screen and (max-width: 600px) {
+    .row .col-1-of-2 {
+      width: calc(100%); }
+    .row .col-2-of-2 {
+      width: calc(100vw); }
+    .row .col-1-of-3 {
+      width: 0 !important; }
+    .row .col-2-of-3 {
+      width: calc(98%); }
+    .row .col-3-of-3 {
+      width: calc(0%); } }
 
 .form-container {
   position: relative;
@@ -286,6 +309,9 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%); }
+    @media only screen and (max-width: 600px) {
+      .form-container .form {
+        width: 95%; } }
     .form-container .form .form__content {
       background-color: #fff;
       width: 100%;
@@ -395,6 +421,9 @@ body {
   color: #fff;
   transform: translate(-50%, -50%) scale(1);
   transition: all .5s; }
+  @media only screen and (max-width: 600px) {
+    .login__container {
+      width: 100%; } }
 
 .form__input {
   font-family: 'Montserrat', sans-serif;
@@ -482,6 +511,9 @@ body {
   transform: translate(-50%, -50%) scale(1);
   transition: all .5s;
   min-height: 40rem; }
+  @media only screen and (max-width: 600px) {
+    .signup__container {
+      width: 100%; } }
 
 .form__input {
   font-family: 'Montserrat', sans-serif;
@@ -558,6 +590,9 @@ body {
   background-image: linear-gradient(to right top, #f2edf4, #ebe4f3, #e1dbf4, #d4d3f5, #c4ccf6, #bbcff9, #b2d3fa, #aad6fa, #b3e1f9, #c2ecf8, #d5f5f9, #e9fdfc);
   position: relative;
   overflow: hidden; }
+  @media only screen and (max-width: 600px) {
+    .landingPage .landingPage {
+      width: calc(100vw); } }
   .landingPage__description {
     position: relative;
     overflow: hidden;
@@ -579,8 +614,7 @@ body {
 .homepage {
   background-image: linear-gradient(to right top, #f2edf4, #ebe4f3, #e1dbf4, #d4d3f5, #c4ccf6, #bbcff9, #b2d3fa, #aad6fa, #b3e1f9, #c2ecf8, #d5f5f9, #e9fdfc);
   width: 100vw;
-  min-height: 100vh;
-  overflow: hidden; }
+  min-height: 100vh; }
   .homepage .btn, .homepage .btn:visited, .homepage .btn:link {
     float: right;
     font-family: 'Montserrat', sans-serif;
@@ -620,6 +654,10 @@ body {
 
 .content {
   margin-top: 13rem; }
+  @media only screen and (max-width: 600px) {
+    .content {
+      margin-top: 1rem;
+      position: relative; } }
   .content__heading {
     background-color: #fbeaff;
     padding: 8rem 3rem;

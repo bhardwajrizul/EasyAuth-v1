@@ -8,13 +8,18 @@
         float: left;
     }
 
+
     .col-1-of-2 {
         width: calc(55%);
     }
 
+
+
     .col-2-of-2 {
         width: calc(45%);
     }
+
+
 
     .col-1-of-3 {
         width: calc(33.3%);
@@ -26,6 +31,36 @@
 
     .col-3-of-3 {
         width: calc(33.3%);
+    }
+
+
+    @include respond('tab') {
+        .col-1-of-2 {
+            width: calc(100vw);
+        }
+        .col-2-of-2 {
+            width: calc(100vw);
+        }
+    }
+
+    @include respond('phone') {
+        .col-1-of-2 {
+            width: calc(100%);
+        }
+        .col-2-of-2 {
+            width: calc(100vw);
+        }
+
+        .col-1-of-3 {
+            width: 0 !important;
+        }
+        .col-2-of-3 {
+            width: calc(98%);
+        }
+    
+        .col-3-of-3 {
+            width: calc(0%);
+        }
     }
 
 }

@@ -345,20 +345,20 @@ const server = http.createServer(async (req, res) => {
         
         let emailExists = await userModel.find({email: email}); 
         if (emailExists.length) {
-          alert += '<p>&bull; Email Address already exists! </p>';
+          alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Email Address already exists! </p>';
           alert += '<p>&nbsp;&nbsp;<strong>Please Log In</strong></p>'
           res.end();
         }
         else {
 
           if (email == '' || !email.match(emailRegex)) {
-            alert += '<p>&bull; Enter Proper Email Address </p>';
+            alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Enter Proper Email Address </p>';
           } 
           if (pass == '' || pass.length < 8 || pass.length > 15) {
-            alert += '<p>&#x2022; Password length must be between 8 & 15 characters</p>';
+            alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Password length must be between 8 & 15 characters</p>';
           }
           else if (passConfirm == '' || passConfirm !== pass ) {
-            alert += "<p>&#x2022; Passwords don't match</p>";
+            alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Passwords don\'t match</p>';
           }
           res.end();
         }
@@ -376,7 +376,7 @@ const server = http.createServer(async (req, res) => {
       req.on('end', async () => {
         let dataJSON = JSON.parse(data);
         if (!dataJSON.name) {
-          alert += '<p>&bull; Enter your name </p>'
+          alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Enter your name </p>'
           res.end();
         } else {
           alert = '';
@@ -387,7 +387,7 @@ const server = http.createServer(async (req, res) => {
           
           
           if (name == '' || !name.match(nameRegex)) {
-            alert += '<p>&bull; Enter a proper name! </p>'
+            alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Enter a proper name! </p>'
             res.end();
           } else {
             // CREATE A HASHED PASSWORD
@@ -427,12 +427,12 @@ const server = http.createServer(async (req, res) => {
         let password = dataJSON.passInput;
 
         if (email == '') {
-          alert += '<p>&bull; Enter an email address!</p>';
+          alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Enter an email address!</p>';
           res.end();
         }
 
         else if (!email.match(emailRegex)) {
-          alert += '<p>&bull; Enter a proper email address!</p>';
+          alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Enter a proper email address!</p>';
           res.end();
         }
 
@@ -457,16 +457,16 @@ const server = http.createServer(async (req, res) => {
               }
 
               else if (!compare) {
-                alert += '<p>&bull; Incorrect Email address or password!</p>';
-                alert += '<p>&bull; You can reset your password</p>';
+                alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Incorrect Email address or password!</p>';
+                alert += '<p><strong class="u-fs-s">&#x26A0;</strong> You can reset your password</p>';
                 res.end();
               }
 
 
             } 
             else {
-              alert += '<p>&bull; Sorry we could not find your account </p>';
-              alert += '<p>&bull; <strong> Try signing up </strong></p>';
+              alert += '<p> <strong class="u-fs-s"><strong class="u-fs-s">&#x26A0;</strong></strong> Sorry we could not find your account </p>';
+              alert += '<p> <strong class="u-fs-s">&#x26A0;</strong> <strong> Try signing up </strong></p>';
               res.end();
             } 
           })

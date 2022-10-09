@@ -6,6 +6,9 @@
     .form {
         width: 60%;
         @include center();
+        @include respond("phone") {
+            width: 95%;
+        }
 
         .form__content {
             background-color: $color-white;

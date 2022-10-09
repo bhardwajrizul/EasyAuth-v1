@@ -2,6 +2,13 @@
     background-image: linear-gradient(to right top, #f2edf4, #ebe4f3, #e1dbf4, #d4d3f5, #c4ccf6, #bbcff9, #b2d3fa, #aad6fa, #b3e1f9, #c2ecf8, #d5f5f9, #e9fdfc);
     position: relative;
     overflow: hidden;
+
+    @include respond('phone') {
+        .landingPage {
+            width: calc(100vw);
+        }
+    }
+
     &__description {
         position: relative;
         overflow: hidden;

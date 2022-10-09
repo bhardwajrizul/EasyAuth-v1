@@ -8,6 +8,11 @@
     font-family: 'Montserrat', sans-serif;
     font-size: 1.5rem;
     width: 40rem;
+    
+    @include respond("phone") {
+      width: 30rem;
+    }
+
     transform: translateX(40rem);
     visibility: hidden;
     // animation: showAlertLeft 8s ease-in-out;
