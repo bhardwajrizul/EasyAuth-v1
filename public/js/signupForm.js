@@ -79,7 +79,6 @@ async function nextBtnClicked(e) {
     
         xhttp.onload = function() {
             let data = JSON.parse(this.response);
-            // console.log(data.confirm);
             if (data.confirm) {
                 // Store Values in Session Storage
                 sessionStorage.setItem('SIGNUP_EMAIL', formData.email);
@@ -211,7 +210,6 @@ function getHomePage() {
         signupForm.innerHTML = '<div class="loader"></div>';
     }
     xhttp.onload =  function() {
-        console.log(this.response);
         
         // JSON DATA ONLY SENT WHEN THERE IS AN ALERT OTHERWISE PAGE IS RE-DIRECTED
         try {

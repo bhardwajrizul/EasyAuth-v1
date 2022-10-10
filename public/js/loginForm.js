@@ -112,7 +112,6 @@ function getHomePageviaLogin(loginFormHTML) {
             }
         } 
         catch(err) {
-            console.log('hello');
             window.location = '/homepage'
         }
     } 
