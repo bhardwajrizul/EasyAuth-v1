@@ -34,3 +34,6 @@ const rateLimit = (maxTokens, refillTime) => {
       next();
     };
   };
+
+  
+module.exports = rateLimit;
