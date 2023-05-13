@@ -13,6 +13,8 @@ const Cookies = require('cookies')
 const mongoose = require('mongoose');
 
 // UTILITY Modules
+const rateLimit = require('./modules/rateLimiter');
+const handleRateLimit = rateLimit(1, 60 * 1000); // 1 requests per minute
 
 // Custom Modules
 const userModel = require('./db');
@@ -368,6 +370,14 @@ const server = http.createServer(async (req, res) => {
     
     else if (req.url == '/signupComplete') {
       
+      let userCount = await User.countDocuments({});
+      let maxUsers = 30;
+      if (userCount > maxUsers) {
+
+        alert += '<p><strong class="u-fs-s">&#x26A0;</strong> New Accounts cannot be created right now! \nContact Admin for sample ID and Password 😊 </p>'
+        res.end();
+      }
+
       alert = '';
       let data = '';
       req.on('data', (chunk) => {
@@ -487,6 +497,8 @@ const server = http.createServer(async (req, res) => {
   }
 
 })
+
+server.on('request', handleRateLimit);
 
 // Make the server listen on a specific port
 server.listen({
