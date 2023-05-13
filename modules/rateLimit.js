@@ -9,6 +9,8 @@ const rateLimit = (maxTokens, refillTime) => {
   
     return (req, res, next) => {
       const ip = req.socket.remoteAddress;
+
+      console.log(ip);
   
       if (!tokens.has(ip)) {
         tokens.set(ip, maxTokens);

@@ -14,7 +14,6 @@ const mongoose = require('mongoose');
 
 // UTILITY Modules
 const rateLimit = require('./modules/rateLimit');
-const handleRateLimit = rateLimit(1, 60 * 1000); // 1 requests per minute
 
 // Custom Modules
 const userModel = require('./db');
@@ -43,7 +42,9 @@ const nameRegex = /^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/;
 
 // Global Variables
 let alert = '';
-const maxUsers = 3;
+const maxUsers = 15;
+const maxRequests = 600;
+const handleRateLimit = rateLimit(maxRequests, 60 * 1000); // 60 requests per minute
 
 
 
@@ -51,13 +52,9 @@ const maxUsers = 3;
 // back a response in a callback
 const server = http.createServer(async (req, res) => {
   // console.log("{URL:::", req.url, " ------ ", "METHOD:::", req.method, "}\n");
-
-
-
-
 })
 
-server.on('request', (req, res) => {
+server.on('request', async (req, res) => {
   handleRateLimit(req, res, () => {
 
     /// HANDLING GET REQUESTS
@@ -377,70 +374,54 @@ server.on('request', (req, res) => {
 
       else if (req.url == '/signupComplete') {
 
-        User.countDocuments({}, (err, userCount) => {
-          if (err) {
-            // Handle the error
-            console.error(err);
-            res.statusCode = 500;
-            res.end();
-            return;
-          }
-        
-          
-        
-          if (userCount > maxUsers) {
-            alert += '<p><strong class="u-fs-s">&#x26A0;</strong> New Accounts cannot be created right now! \nContact Admin for sample ID and Password 😊 </p>';
-            res.end();
-            return;
-          }
-        
-          // Continue with the request handler code
-        });
-        
-
         alert = '';
         let data = '';
         req.on('data', (chunk) => {
           data += chunk;
         });
         req.on('end', async () => {
-          let dataJSON = JSON.parse(data);
-          if (!dataJSON.name) {
-            alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Enter your name </p>'
-            res.end();
-          } else {
-            alert = '';
-            let email = dataJSON.email.trim().toLowerCase();
-            let password = dataJSON.pass;
-            let passwordConfirm = dataJSON.passConfirm;
-            let name = dataJSON.name.trim();
-
-
-            if (name == '' || !name.match(nameRegex)) {
-              alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Enter a proper name! </p>'
+          const count = await userModel.countDocuments({});
+          console.log(count);
+          if (count < maxUsers) {
+            let dataJSON = JSON.parse(data);
+            if (!dataJSON.name) {
+              alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Enter your name </p>'
               res.end();
             } else {
-              // CREATE A HASHED PASSWORD
-              password = await bcrypt.hash(password, 10);
-              passwordConfirm = '';
-
-              // CREATE JWT AND STORE IT AS HTTP-COOKIE
-              jwt.sign({ userEmail: email }, process.env.JWT_SECRET, { expiresIn: 60 * 1000 }, async (err, token) => {
-                if (err) {
-                  res.end();
-                } else {
-                  let cookies = new Cookies(req, res, { keys: [process.env.COOKIE_KEYS] });
-                  cookies.set(process.env.COOKIE_NAME, token, { maxAge: 60 * 1000, sameSite: 'lax', overwrite: true });
-                  await userModel.create({ email, name, password, passwordConfirm });
-                  res.end();
-                }
-              });
+              alert = '';
+              let email = dataJSON.email.trim().toLowerCase();
+              let password = dataJSON.pass;
+              let passwordConfirm = dataJSON.passConfirm;
+              let name = dataJSON.name.trim();
 
 
+              if (name == '' || !name.match(nameRegex)) {
+                alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Enter a proper name! </p>'
+                res.end();
+              } else {
+                // CREATE A HASHED PASSWORD
+                password = await bcrypt.hash(password, 10);
+                passwordConfirm = '';
+
+                // CREATE JWT AND STORE IT AS HTTP-COOKIE
+                jwt.sign({ userEmail: email }, process.env.JWT_SECRET, { expiresIn: 60 * 1000 }, async (err, token) => {
+                  if (err) {
+                    res.end();
+                  } else {
+                    let cookies = new Cookies(req, res, { keys: [process.env.COOKIE_KEYS] });
+                    cookies.set(process.env.COOKIE_NAME, token, { maxAge: 60 * 1000, sameSite: 'lax', overwrite: true });
+                    await userModel.create({ email, name, password, passwordConfirm });
+                    res.end();
+                  }
+                });
+              }
             }
-
           }
-
+          else {
+            alert += '<p><strong class="u-fs-s">&#x26A0;</strong> New Accounts not allowed to register anymore! \nContact Admin for support</p>'
+            console.log(alert);
+            res.end();
+          }
         })
       }
 
