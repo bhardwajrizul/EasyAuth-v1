@@ -11,6 +11,8 @@ const rateLimit = (maxTokens, refillTime) => {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
     console.log(ip);
+    console.log(typeof(ip));
+
 
     if (!tokens.has(ip)) {
       tokens.set(ip, maxTokens);
