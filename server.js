@@ -43,8 +43,8 @@ const nameRegex = /^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/;
 // Global Variables
 let alert = '';
 const maxUsers = 15;
-const maxRequests = 60;
-const handleRateLimit = rateLimit(maxRequests, 60 * 1000); // 60 requests per minute
+const maxRequests = 300;
+const handleRateLimit = rateLimit(maxRequests, 60 * 1000); // 300 requests per minute
 
 
 
@@ -315,10 +315,19 @@ server.on('request', async (req, res) => {
 
       }
 
-      else if (req.url == '/forgot') {
-        res.writeHead(404, { "Content-Type": "text/html" });
-        res.end("This service is not functional yet. Please Navigate back!")
-      }
+      else if (req.url == '/getForgotForm') {
+
+        fs.readFile(path.join(__dirname, './public/html/components/forgot.html'), (err, data) => {
+          if (err) {
+            res.writeHead(404, { 'Content-Type': 'text/html' });
+            res.end('404 Bad Gateway');
+          } else {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end(data);
+          }
+        })
+      } 
+
 
       /// for unhandeled route  send a suitable response
       else {

@@ -1,3 +1,5 @@
+
+
 let loginPopBtn = document.getElementById('loginPopupBtn');
 let loginForm = document.getElementById('popupLogin');
 
@@ -41,7 +43,6 @@ function validateLogin(loginFormHTML) {
             loginForm.innerHTML = loginFormHTML;
             let closeLoginBtn = document.getElementById('closeLoginBtn');
             let loginBtn = document.getElementById('loginBtn');
-            
             
             loginBtn.addEventListener('click', function(e){
                 e.preventDefault();

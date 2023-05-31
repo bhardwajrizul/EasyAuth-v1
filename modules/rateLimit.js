@@ -9,7 +9,7 @@ const rateLimit = (maxTokens, refillTime) => {
 
   return (req, res, next) => {
     let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
-    console.log(ip);
+    // console.log(ip);
     ip = ip.split(',')[0].trim();
     console.log("Client Public IP :  ",(ip));
 
