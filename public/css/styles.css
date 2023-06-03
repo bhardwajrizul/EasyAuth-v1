@@ -298,6 +298,18 @@ body {
   border-radius: 5px;
 }
 
+.success-alert {
+  background-color: #a3f7b5;
+  border-left: 5px solid #0c8f13;
+  width: 60rem;
+  transform: translateX(60rem);
+}
+@media only screen and (max-width: 600px) {
+  .success-alert {
+    width: 35rem;
+  }
+}
+
 .loader {
   margin: 25rem auto;
   border: 3px solid #fff;

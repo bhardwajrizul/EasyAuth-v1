@@ -17,7 +17,21 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, "Name is required!"]
+  },
+  resetPass: {
+    type: String,
+    default: null
+  },
+  resetPassExpires: {
+    type: Date,
+    default: null
+  },
+  timesPassUpdated: {
+    type: Number,
+    max: 3,
+    default: 0
   }
+
 });
 
 const userModel = mongoose.model('User', userSchema);

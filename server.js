@@ -5,6 +5,7 @@ require('dotenv').config();
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 // NPM modules
 const bcrypt = require('bcrypt');
@@ -51,7 +52,7 @@ const handleRateLimit = rateLimit(maxRequests, 60 * 1000); // 300 requests per m
 // creating a http server that handles a request and sends 
 // back a response in a callback
 const server = http.createServer(async (req, res) => {
-  // console.log("{URL:::", req.url, " ------ ", "METHOD:::", req.method, "}\n");
+  console.log("{URL:::", req.url, " ------ ", "METHOD:::", req.method, "}\n");
 })
 
 server.on('request', async (req, res) => {
@@ -326,8 +327,46 @@ server.on('request', async (req, res) => {
             res.end(data);
           }
         })
-      } 
+      }
 
+      else if (req.url == '/getResetToken') {
+        let dataValid = {
+          confirm: false,
+          data: ''
+        }
+
+        if (getLengthAlert(alert) > 0) {
+          // THERE IS ALERT PRESENT
+          dataValid.confirm = false;
+          dataValid.data = alert;
+
+          res.writeHead(200, { 'Content-Type': 'text/html' });
+          res.end(JSON.stringify(dataValid));
+        }
+        else if (getLengthAlert(alert) == 0) {
+          // THERE IS NO ALERT
+          let successAlert = '';
+          successAlert += '<p><strong class="u-fs-s u-color-danger">&#x2705;</strong>If your account exists then check your email for further instructions</p>';
+          successAlert += '<p><strong class="u-fs-s u-color-danger">&#x26A0; </strong> Make Sure to check your spam folder if you don\'t see the email</p>';
+          dataValid.confirm = true;
+          dataValid.data = successAlert;
+          // console.log(dataValid);
+          res.writeHead(200, { 'Content-Type': 'text/html' });
+          res.end(JSON.stringify(dataValid));
+        }
+        else {
+          dataValid.confirm = false;
+          dataValid.data = '';
+          res.writeHead(301, { 'Content-type': 'text/html', 'Location': '/' });
+          res.end();
+        }
+      }
+
+      else if (req.url.startsWith('/resetPassword')) {
+        console.log(req.url);
+        res.writeHead(200, { 'Content-Type': 'text/html' });
+        res.end("Hello darkness my old friend");
+      }
 
       /// for unhandeled route  send a suitable response
       else {
@@ -360,20 +399,20 @@ server.on('request', async (req, res) => {
 
           let emailExists = await userModel.find({ email: email });
           if (emailExists.length) {
-            alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Email Address already exists! </p>';
+            alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Email Address already exists! </p>';
             alert += '<p>&nbsp;&nbsp;<strong>Please Log In</strong></p>'
             res.end();
           }
           else {
 
             if (email == '' || !email.match(emailRegex)) {
-              alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Enter Proper Email Address </p>';
+              alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Enter Proper Email Address </p>';
             }
             if (pass == '' || pass.length < 8 || pass.length > 15) {
-              alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Password length must be between 8 & 15 characters</p>';
+              alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Password length must be between 8 & 15 characters</p>';
             }
             else if (passConfirm == '' || passConfirm !== pass) {
-              alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Passwords don\'t match</p>';
+              alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Passwords don\'t match</p>';
             }
             res.end();
           }
@@ -394,7 +433,7 @@ server.on('request', async (req, res) => {
           if (count < maxUsers) {
             let dataJSON = JSON.parse(data);
             if (!dataJSON.name) {
-              alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Enter your name </p>'
+              alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Enter your name </p>'
               res.end();
             } else {
               alert = '';
@@ -405,7 +444,7 @@ server.on('request', async (req, res) => {
 
 
               if (name == '' || !name.match(nameRegex)) {
-                alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Enter a proper name! </p>'
+                alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Enter a proper name! </p>'
                 res.end();
               } else {
                 // CREATE A HASHED PASSWORD
@@ -427,7 +466,7 @@ server.on('request', async (req, res) => {
             }
           }
           else {
-            alert += '<p><strong class="u-fs-s">&#x26A0;</strong> New Accounts not allowed to register anymore! \nContact Admin for support</p>'
+            alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> New Accounts not allowed to register anymore! \nContact Admin for support</p>'
             console.log(alert);
             res.end();
           }
@@ -447,12 +486,12 @@ server.on('request', async (req, res) => {
           let password = dataJSON.passInput;
 
           if (email == '') {
-            alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Enter an email address!</p>';
+            alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Enter an email address!</p>';
             res.end();
           }
 
           else if (!email.match(emailRegex)) {
-            alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Enter a proper email address!</p>';
+            alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Enter a proper email address!</p>';
             res.end();
           }
 
@@ -477,22 +516,106 @@ server.on('request', async (req, res) => {
                 }
 
                 else if (!compare) {
-                  alert += '<p><strong class="u-fs-s">&#x26A0;</strong> Incorrect Email address or password!</p>';
-                  alert += '<p><strong class="u-fs-s">&#x26A0;</strong> You can reset your password</p>';
+                  alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Incorrect Email address or password!</p>';
+                  alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> You can reset your password</p>';
                   res.end();
                 }
 
 
               }
               else {
-                alert += '<p> <strong class="u-fs-s"><strong class="u-fs-s">&#x26A0;</strong></strong> Sorry we could not find your account </p>';
-                alert += '<p> <strong class="u-fs-s">&#x26A0;</strong> <strong> Try signing up </strong></p>';
+                alert += '<p> <strong class="u-fs-s u-color-danger"><strong class="u-fs-s u-color-danger">&#x26A0;</strong></strong> Sorry we could not find your account </p>';
+                alert += '<p> <strong class="u-fs-s u-color-danger">&#x26A0;</strong> <strong> Try signing up </strong></p>';
                 res.end();
               }
             })
           }
         })
       }
+
+      else if (req.url == '/resetConfirm') {
+        let data = '';
+        alert = '';
+        req.on('data', (chunk) => {
+          data += chunk;
+        })
+        req.on('end', () => {
+          let dataJSON = JSON.parse(data);
+          let email = dataJSON.emailInput.trim().toLowerCase();
+          if (email == '') {
+            alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Enter an email address!</p>';
+            res.end();
+          }
+          else if (!email.match(emailRegex)) {
+            alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Enter a proper email address!</p>';
+            res.end();
+          }
+          else {
+            // Check if email exists in DB and timesPassUpdated is less than 3
+            userModel.find({ email }, async (err, docs) => {
+              if (err || docs.length == 0) {
+                alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>No account associated Email address not found!</p>';
+                res.end();
+              }
+              else if (docs.length > 0) {
+                // if timesPassUpdated is greater than 3 then don't allow user to reset password and send an alert to contact admin
+                if (docs[0].timesPassUpdated >= 3) {
+                  alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> You have exceeded the maximum number of password reset attempts!</p>';
+                  alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Please contact the admin for further assistance</p>';
+                  res.end();
+                }
+                // SEND EMAIL
+                else {
+                  let timesPassUpdated = docs[0].timesPassUpdated + 1;
+                  // generate a random string (reset token) and store it in the user's database record
+                  let token = crypto.randomBytes(Math.ceil(16)).toString('hex').slice(0, 16);
+                  // reset token expiry time to 5 minutes
+                  let resetTokenExpiry = Date.now() + 5 * 60 * 1000;
+                  userModel.updateOne({ email }, { resetPass: token, resetPassExpires: resetTokenExpiry, timesPassUpdated: timesPassUpdated }, (err, docs) => {
+                    if (err) {
+                      console.log("MONGO ERROR: ", err);
+                      alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Unexpected Error!</p>';
+                      res.end();
+                    }
+                    else {
+                      // send an email to the user with the reset token
+                      const apiKey = process.env.API_KEY;
+                      const senderEmail = process.env.SENDER_EMAIL;
+                      const receiverEmail = email;
+                      const subject = 'Reset your EasyAuth account Password';
+                      const link = `http://${host}:${port}/resetPassword?token=${token}&email=${email}`;
+                      const body = `To reset your EasyAuth Account Password, click or navigate to the link: ${link}\nIf you did not mean to change your password, you can ignore this email.`;
+
+                      // SEND EMAIL BY MAKING A POST REQUEST TO ELASTIC EMAIL API
+                      const baseUrl = process.env.BASE_URL;
+                      const url = `${baseUrl}?apikey=${apiKey}&subject=${encodeURIComponent(subject)}&to=${encodeURIComponent(receiverEmail)}&from=${encodeURIComponent(senderEmail)}&body=${encodeURIComponent(body)}`;
+
+                      fetch(url, {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json'
+                        }
+                      }).then(response => {
+                        if (response) {
+                          // EMAIL SENT SUCCESSFULLY
+                          res.end();
+                        }
+                      }).catch((err) => {
+                        // EMAIL NOT SENT
+                        console.log("EMAIL NOT SENT: ", err);
+                        alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Unexpected Error!</p>';
+                        res.end();
+                        }
+                      )
+                    }
+                  })
+                }
+              }
+            })
+          }
+        })
+      }
+
 
 
       ///
