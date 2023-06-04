@@ -774,6 +774,11 @@ server.on('request', async (req, res) => {
             alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Passwords don\'t match!</p>';
             res.end();
           }
+
+          else if (password.length < 8 || password.length > 15) {
+            alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Password length must be between 8 & 15 characters</p>';
+            res.end();
+          }
           
           else if (!token || !email) {
             alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Invalid Request!</p>';
