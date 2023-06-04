@@ -484,12 +484,15 @@ server.on('request', async (req, res) => {
 
             if (email == '' || !email.match(emailRegex)) {
               alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Enter Proper Email Address </p>';
+              res.end();
             }
             if (pass == '' || pass.length < 8 || pass.length > 15) {
               alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Password length must be between 8 & 15 characters</p>';
+              res.end();
             }
             else if (passConfirm == '' || passConfirm !== pass) {
               alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Passwords don\'t match</p>';
+              res.end();
             }
             res.end();
           }
