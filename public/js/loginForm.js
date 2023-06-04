@@ -71,7 +71,7 @@ function sendLoginDetails(loginFormHTML) {
         },
         body: JSON.stringify(formData)
     }).then(response => {
-        console.log(response)
+        // console.log(response)
         getHomePageviaLogin(loginFormHTML);
     });
 }

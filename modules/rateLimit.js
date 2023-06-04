@@ -11,7 +11,7 @@ const rateLimit = (maxTokens, refillTime) => {
     let ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     // console.log(ip);
     ip = ip.split(',')[0].trim();
-    console.log("Client Public IP :  ",(ip));
+    // console.log("Client Public IP :  ",(ip));
 
 
     if (!tokens.has(ip)) {
@@ -21,9 +21,10 @@ const rateLimit = (maxTokens, refillTime) => {
     const tokenCount = tokens.get(ip);
 
     if (tokenCount === 0) {
+      console.log("Client Public IP :  ", (ip));
       res.statusCode = 429;
       res.setHeader('Retry-After', Math.ceil(refillTime / 1000));
-      res.end('Too many requests!! Retry-After '+  Math.ceil(refillTime / 1000) + ' seconds :-)');
+      res.end('Too many requests!! Retry-After ' + Math.ceil(refillTime / 1000) + ' seconds :-)');
       return;
     }
 

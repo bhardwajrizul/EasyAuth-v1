@@ -57,6 +57,10 @@
     color: $color-white !important;
 }
 
+.u-bg-color-white {
+    background-color: $color-white !important;
+}
+
 .u-color-danger {
     color: $color-danger !important
 }
@@ -98,6 +102,14 @@
     margin-bottom: 3rem;
 }
 
+.u-mr-s {
+    margin-right: 3rem;
+}
+
+.u-pb-m {
+    padding-bottom: 8rem !important;
+}
+
 .u-fs-m {
     font-size: 3rem !important;
 }
@@ -108,6 +120,10 @@
 
 .u-text-shadow-1 {
     text-shadow: 1px 1px 1px $color-black;
+}
+
+.u-box-shadow-1 {
+    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.1);
 }
 
 .u-underline {
@@ -133,4 +149,22 @@
 
 .u-lower {
     text-transform: lowercase !important;
+}
+
+.u-width-100 {
+    width: 100% !important;
+}
+
+.u-width-80 {
+    width: 80% !important;
+    @include respond("phone") {
+        width: 100% !important;
+    }
+}
+
+.u-width-60 {
+    width: 60% !important;
+    @include respond("phone") {
+        width: 100% !important;
+    }
 }
