@@ -5,11 +5,17 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "node-sass": "node-sass -w public/sass/main.scss public/css/styles.css",
-    "watch-scss": "sass --watch public/sass/main.scss public/css/styles.css",
-    "compile-scss": "sass public/sass/main.scss public/css/styles.css",
+    
+    "compile-scss": "sass public/sass/main.scss public/css/styles.comp.css",
+    "prefix-css": " postcss --use autoprefixer -b 'last 10 versions'  public/css/styles.comp.css -o public/css/styles.prefix.css",
+    "compress-css": "node-sass public/css/styles.prefix.css public/css/styles.css --output-style compressed",
+    "build-css": "npm-run-all compile-scss prefix-css compress-css",
+    
     "devserver": "nodemon ./server.js",
-    "start": "npm-run-all --parallel devserver watch-scss"
+    "watch-scss": "sass --watch public/sass/main.scss public/css/styles.css",
+    
+    "start": "npm-run-all --parallel devserver watch-scss",
+    "build":  "npm-run-all build-css"
   },
   "keywords": [],
   "author": "",
@@ -20,11 +26,14 @@
     "dotenv": "^16.0.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.6.2",
-    "node-sass": "^7.0.3",
-    "npm-run-all": "^4.1.5",
     "sass": "^1.62.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "autoprefixer": "^10.4.14",
+    "node-sass": "^9.0.0",
+    "nodemon": "^2.0.22",
+    "npm-run-all": "^4.1.5",
+    "postcss": "^8.4.24",
+    "postcss-cli": "^10.1.0"
   }
 }

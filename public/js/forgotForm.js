@@ -5,7 +5,7 @@ let resetPassBtn;
 // EVENT DELEGATION 
 document.body.addEventListener('click', function(event) {
     if (event.target && event.target.id === 'forgotPopupBtn') {
-        console.log("Forgot Cliked")
+        // console.log("Forgot Cliked")
         event.preventDefault();
         // Close Login Form
         // No need to declare loginForm variable as it is already open and inside it we are opening forgotForm

@@ -28,7 +28,6 @@ const userSchema = new mongoose.Schema({
   },
   timesPassUpdated: {
     type: Number,
-    max: 3,
     default: 0
   }
 

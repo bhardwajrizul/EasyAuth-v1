@@ -6,6 +6,8 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const url = require('url');
+
 
 // NPM modules
 const bcrypt = require('bcrypt');
@@ -21,6 +23,7 @@ const userModel = require('./db');
 const replaceTemplate = require('./modules/replaceTemplate');
 const { decode } = require('punycode');
 const { prependOnceListener } = require('process');
+const { reset } = require('nodemon');
 
 
 
@@ -45,6 +48,9 @@ const nameRegex = /^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/;
 let alert = '';
 const maxUsers = 15;
 const maxRequests = 300;
+const maxResetLimit = 3;
+const validFor = 5 * 60 * 1000;
+const oneMinute = 60 * 1000;
 const handleRateLimit = rateLimit(maxRequests, 60 * 1000); // 300 requests per minute
 
 
@@ -52,7 +58,7 @@ const handleRateLimit = rateLimit(maxRequests, 60 * 1000); // 300 requests per m
 // creating a http server that handles a request and sends 
 // back a response in a callback
 const server = http.createServer(async (req, res) => {
-  console.log("{URL:::", req.url, " ------ ", "METHOD:::", req.method, "}\n");
+  // console.log("{URL:::", req.url, " ------ ", "METHOD:::", req.method, "}\n");
 })
 
 server.on('request', async (req, res) => {
@@ -345,9 +351,18 @@ server.on('request', async (req, res) => {
         }
         else if (getLengthAlert(alert) == 0) {
           // THERE IS NO ALERT
+          const expiryDate = Date.now() + validFor;
+          const currentTime = Date.now();
+          const timeDifference = expiryDate - currentTime;
+          const minutes = Math.ceil(timeDifference / oneMinute);
+
+          // console.log(minutes);
+
           let successAlert = '';
           successAlert += '<p><strong class="u-fs-s u-color-danger">&#x2705;</strong>If your account exists then check your email for further instructions</p>';
-          successAlert += '<p><strong class="u-fs-s u-color-danger">&#x26A0; </strong> Make Sure to check your spam folder if you don\'t see the email</p>';
+          successAlert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Make Sure to check your spam folder if you don\'t see the email</p>';
+          successAlert += `<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> URL is valid for ${minutes} minutes!</p>`;
+
           dataValid.confirm = true;
           dataValid.data = successAlert;
           // console.log(dataValid);
@@ -363,9 +378,69 @@ server.on('request', async (req, res) => {
       }
 
       else if (req.url.startsWith('/resetPassword')) {
-        console.log(req.url);
-        res.writeHead(200, { 'Content-Type': 'text/html' });
-        res.end("Hello darkness my old friend");
+
+
+        const resetHTML = path.join(__dirname, '/public/html/pages/reset_password.html');
+        fs.readFile(resetHTML, 'utf-8', (err, data) => {
+          if (err) {
+            res.writeHead(404, { 'Content-Type': 'text/html' });
+            res.end('404 Bad Gateway');
+          } else {
+            res.writeHead(200, { 'Content-Type': 'text/html' });
+            res.end(data);
+          }
+        })
+      }
+
+      else if (req.url == '/checkResetUrl') {
+        let dataValid = {
+          confirm: false,
+          data: ''
+        }
+        if (getLengthAlert(alert) > 0) {
+          // THERE IS ALERT PRESENT
+          dataValid.confirm = false;
+          dataValid.data = alert;
+          res.writeHead(200, { 'Content-Type': 'text/html' });
+          res.end(JSON.stringify(dataValid));
+        } 
+        else if (getLengthAlert(alert) == 0) {
+          fs.readFile(path.join(__dirname, './public/html/components/reset.html'), (err, dataHTML) => {
+            if (err) {
+              // send a response for invalid request
+              dataValid.confirm = false;
+              dataValid.data = '404 Bad Gateway'; 
+              res.writeHead(404, { "Content-Type": 'text/html' });
+              res.end(JSON.stringify(dataValid));
+            }
+            else {
+              dataValid.confirm = true;
+              dataValid.data = dataHTML.toString();
+              // send a response for invalid request
+              res.writeHead(200, { "Content-Type": 'text/html' });
+              res.end(JSON.stringify(dataValid));
+            }
+          })
+        }
+      }
+
+      else if (req.url == '/resetComplete') {
+        let dataValid = { 
+          confirm: false,
+          data: ''
+        }
+        if (getLengthAlert(alert) > 0) {
+          dataValid.confirm = false;
+          dataValid.data = alert;
+          res.writeHead(200, { 'Content-Type': 'text/html' });
+          res.end(JSON.stringify(dataValid));
+        }
+        else if (getLengthAlert(alert) == 0) {
+          dataValid.confirm = true;
+          dataValid.data = 'Password Reset Successful!';
+          res.writeHead(200, { 'Content-Type': 'text/html' });
+          res.end(JSON.stringify(dataValid));
+        }
       }
 
       /// for unhandeled route  send a suitable response
@@ -429,7 +504,7 @@ server.on('request', async (req, res) => {
         });
         req.on('end', async () => {
           const count = await userModel.countDocuments({});
-          console.log(count);
+          // console.log(count);
           if (count < maxUsers) {
             let dataJSON = JSON.parse(data);
             if (!dataJSON.name) {
@@ -467,7 +542,7 @@ server.on('request', async (req, res) => {
           }
           else {
             alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> New Accounts not allowed to register anymore! \nContact Admin for support</p>'
-            console.log(alert);
+            // console.log(alert);
             res.end();
           }
         })
@@ -559,7 +634,7 @@ server.on('request', async (req, res) => {
               }
               else if (docs.length > 0) {
                 // if timesPassUpdated is greater than 3 then don't allow user to reset password and send an alert to contact admin
-                if (docs[0].timesPassUpdated >= 3) {
+                if (docs[0].timesPassUpdated >= maxResetLimit) {
                   alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> You have exceeded the maximum number of password reset attempts!</p>';
                   alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Please contact the admin for further assistance</p>';
                   res.end();
@@ -570,7 +645,7 @@ server.on('request', async (req, res) => {
                   // generate a random string (reset token) and store it in the user's database record
                   let token = crypto.randomBytes(Math.ceil(16)).toString('hex').slice(0, 16);
                   // reset token expiry time to 5 minutes
-                  let resetTokenExpiry = Date.now() + 5 * 60 * 1000;
+                  let resetTokenExpiry = Date.now() + validFor;
                   userModel.updateOne({ email }, { resetPass: token, resetPassExpires: resetTokenExpiry, timesPassUpdated: timesPassUpdated }, (err, docs) => {
                     if (err) {
                       console.log("MONGO ERROR: ", err);
@@ -583,7 +658,7 @@ server.on('request', async (req, res) => {
                       const senderEmail = process.env.SENDER_EMAIL;
                       const receiverEmail = email;
                       const subject = 'Reset your EasyAuth account Password';
-                      const link = `http://${host}:${port}/resetPassword?token=${token}&email=${email}`;
+                      const link = `http://${req.headers.host}/resetPassword?token=${token}&email=${email}`;
                       const body = `To reset your EasyAuth Account Password, click or navigate to the link: ${link}\nIf you did not mean to change your password, you can ignore this email.`;
 
                       // SEND EMAIL BY MAKING A POST REQUEST TO ELASTIC EMAIL API
@@ -605,7 +680,7 @@ server.on('request', async (req, res) => {
                         console.log("EMAIL NOT SENT: ", err);
                         alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Unexpected Error!</p>';
                         res.end();
-                        }
+                      }
                       )
                     }
                   })
@@ -616,10 +691,137 @@ server.on('request', async (req, res) => {
         })
       }
 
+      else if (req.url == '/checkResetUrl') {
+        let data = '';
+        alert = '';
+        req.on('data', (chunk) => {
+          data += chunk;
+        })
+        req.on('end', () => {
+          const urlString = data;
+          const parsedUrl = new url.URL(urlString, `${req.headers.host}`);
+
+          const token = parsedUrl.searchParams.get('token');
+          const email = parsedUrl.searchParams.get('email');
+          // console.log(token, email)
+          if (!token || !email) {
+            // send a response for invalid request
+            alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Invalid Request!</p>';
+            res.end();
+          }
+          else if (email && token) {
+            userModel.find({ email }, (err, docs) => {
+              if (err || docs.length == 0) {
+                // send a response for invalid request
+                alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Invalid Request!</p>';
+                res.end();
+              }
+              else if (docs.length > 0) {
+                let user = docs[0];
+                if (user.resetPass == token) {
+                  if (user.resetPassExpires > Date.now()) {
+                    // VALID RESET URL
+                    res.end();
+                  }
+                  // else token expired
+                  else {
+                    // send a response for invalid request
+                    alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Token Expired!</p>';
+                    res.end();
+                  }
+                }
+                // Token is invalid or tampered
+                else {
+                  alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Invalid Request!</p>';
+                  res.end();
+                }
+              }
+            })
+          }
+        })
+      }
+
+      else if (req.url == '/resetComplete') {
+        let data = '';
+        alert = '';
+        req.on('data', (chunk) => {
+          data += chunk;
+        })
 
 
+
+        req.on('end', () => {
+          let dataJSON = JSON.parse(data);
+          let password = dataJSON.pass;
+          let passwordConfirm = dataJSON.passConfirm;
+          const urlString = dataJSON.url;
+          const parsedUrl = new url.URL(urlString, `${req.headers.host}`);
+  
+          const token = parsedUrl.searchParams.get('token');
+          const email = parsedUrl.searchParams.get('email');
+          if (!password) {
+            alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Enter a password!</p>';
+            res.end();
+          }  
+          else if (!passwordConfirm) {
+            alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Confirm your password!</p>';
+            res.end();
+          }
+          else if (password !== passwordConfirm) {
+            alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Passwords don\'t match!</p>';
+            res.end();
+          }
+          else if (!token || !email) {
+            alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Invalid Request!</p>';
+            res.end();
+          }
+          else if (email && token) {
+            userModel.find({ email }, async (err, docs) => {
+              if (err || docs.length == 0) {
+                // send a response for invalid request
+                alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Invalid Request!</p>';
+                res.end();
+              }
+              else if (docs.length > 0) {
+                let user = docs[0];
+                if (user.resetPass == token) {
+                  if (user.resetPassExpires > Date.now()) {
+                    // VALID RESET URL
+                    password = await bcrypt.hash(password, 10);
+                    passwordConfirm = '';
+                    resetPass = '';
+                    resetPassExpires = '';
+                    userModel.updateOne({ email }, { password, passwordConfirm, resetPass, resetPassExpires }, (err, docs) => {
+                      if (err) {
+                        alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Unexpected Error!</p>';
+                        res.end();
+                      }
+                      else if (docs) {
+                        res.end();
+                      }
+                    })
+                  }
+                  // else token expired
+                  else {
+                    // send a response for invalid request
+                    alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Token Expired!</p>';
+                    res.end();
+                  }
+                }
+                // Token is invalid or tampered
+                else {
+                  alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Invalid Request!</p>';
+                  res.end();
+                }
+              }
+            })
+          }
+
+          
+
+        })
+      }
       ///
-
     }
 
 
