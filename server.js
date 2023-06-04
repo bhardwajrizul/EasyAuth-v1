@@ -702,7 +702,7 @@ server.on('request', async (req, res) => {
         })
         req.on('end', () => {
           const urlString = data;
-          const parsedUrl = new url.URL(urlString, `${req.headers.host}`);
+          const parsedUrl = new url.URL(urlString, `http://${req.headers.host}`);
 
           const token = parsedUrl.searchParams.get('token');
           const email = parsedUrl.searchParams.get('email');
@@ -758,7 +758,7 @@ server.on('request', async (req, res) => {
           let password = dataJSON.pass;
           let passwordConfirm = dataJSON.passConfirm;
           const urlString = dataJSON.url;
-          const parsedUrl = new url.URL(urlString, `${req.headers.host}`);
+          const parsedUrl = new url.URL(urlString, `http://${req.headers.host}`);
 
           const token = parsedUrl.searchParams.get('token');
           const email = parsedUrl.searchParams.get('email');
