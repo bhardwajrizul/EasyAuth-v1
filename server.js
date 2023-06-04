@@ -661,7 +661,6 @@ server.on('request', async (req, res) => {
                       const receiverEmail = email;
                       const subject = 'Reset your EasyAuth account Password';
                       const link = `http://${req.headers.host}/resetPassword?token=${token}&email=${email}`;
-                      const link = `http://${req.headers.host}/resetPassword?token=${token}&email=${email}`;
                       const body = `To reset your EasyAuth Account Password, click or navigate to the link: ${link}\nIf you did not mean to change your password, you can ignore this email.`;
 
                       // SEND EMAIL BY MAKING A POST REQUEST TO ELASTIC EMAIL API
