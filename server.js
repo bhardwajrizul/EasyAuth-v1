@@ -405,13 +405,13 @@ server.on('request', async (req, res) => {
           dataValid.data = alert;
           res.writeHead(200, { 'Content-Type': 'text/html' });
           res.end(JSON.stringify(dataValid));
-        }
+        } 
         else if (getLengthAlert(alert) == 0) {
           fs.readFile(path.join(__dirname, './public/html/components/reset.html'), (err, dataHTML) => {
             if (err) {
               // send a response for invalid request
               dataValid.confirm = false;
-              dataValid.data = '404 Bad Gateway';
+              dataValid.data = '404 Bad Gateway'; 
               res.writeHead(404, { "Content-Type": 'text/html' });
               res.end(JSON.stringify(dataValid));
             }
@@ -427,7 +427,7 @@ server.on('request', async (req, res) => {
       }
 
       else if (req.url == '/resetComplete') {
-        let dataValid = {
+        let dataValid = { 
           confirm: false,
           data: ''
         }
@@ -660,6 +660,7 @@ server.on('request', async (req, res) => {
                       const senderEmail = process.env.SENDER_EMAIL;
                       const receiverEmail = email;
                       const subject = 'Reset your EasyAuth account Password';
+                      const link = `http://${req.headers.host}/resetPassword?token=${token}&email=${email}`;
                       const link = `http://${req.headers.host}/resetPassword?token=${token}&email=${email}`;
                       const body = `To reset your EasyAuth Account Password, click or navigate to the link: ${link}\nIf you did not mean to change your password, you can ignore this email.`;
 

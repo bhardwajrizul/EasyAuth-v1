@@ -5,14 +5,17 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    
     "compile-scss": "sass public/sass/main.scss public/css/styles.comp.css",
     "prefix-css": " postcss --use autoprefixer -b 'last 10 versions'  public/css/styles.comp.css -o public/css/styles.prefix.css",
     "compress-css": "node-sass public/css/styles.prefix.css public/css/styles.css --output-style compressed",
     "build-css": "npm-run-all compile-scss prefix-css compress-css",
+    
     "devserver": "nodemon ./server.js",
     "watch-scss": "sass --watch public/sass/main.scss public/css/styles.css",
+    
     "start": "npm-run-all --parallel devserver watch-scss",
-    "build": "npm-run-all build-css"
+    "build":  "npm-run-all build-css"
   },
   "keywords": [],
   "author": "",
