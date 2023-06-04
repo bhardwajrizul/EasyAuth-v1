@@ -774,6 +774,7 @@ server.on('request', async (req, res) => {
             alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Passwords don\'t match!</p>';
             res.end();
           }
+          
           else if (!token || !email) {
             alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Invalid Request!</p>';
             res.end();

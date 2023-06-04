@@ -124,6 +124,11 @@ function getResetToken(forgotFormHTML, formData) {
 function displaySuccessAlert(data) {
     let xhttp = new XMLHttpRequest();
     xhttp.open('GET', '/', true);
+    xhttp.onProgress = () => {
+        forgotForm.style.visibility = 'visible';
+        forgotForm.style.opacity = 1;
+        forgotForm.innerHTML = '<div class="loader"></div>';
+    }
     xhttp.onload = function() {
         forgotForm.style.visibility = 'hidden';
         forgotForm.style.opacity = 0;
