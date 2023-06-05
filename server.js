@@ -68,6 +68,7 @@ server.on('request', async (req, res) => {
 
     /// HANDLING GET REQUESTS
     if (req.method == 'GET') {
+
       // if request is made at the root '/' route 
       if (req.url === '/') {
         // Create a suitable index.html file path NOTE*(index.html must always be in the root directory of static (public) folder)
@@ -84,10 +85,11 @@ server.on('request', async (req, res) => {
 
         // This catches any errors that happen while creating the readable stream (usually invalid names)
         HTMLStream.on('error', (err) => {
+          console.log(err);
           // set the response to type to be text
           res.writeHead(404, { 'Content-Type': 'text/html' });
           // Send a suitable response
-          res.end();
+          res.end("Internal Server Error");
         });
       }
 
@@ -109,10 +111,11 @@ server.on('request', async (req, res) => {
 
         // This catches any errors that happen while creating the readable stream (usually invalid names)
         cssStream.on('error', (err) => {
+          console.log(err);
           // set the response to type to be text
           res.writeHead(404, { 'Content-Type': 'text/html' });
           // Send a suitable response
-          res.end();
+          res.end("Internal Server Error");
         });
 
       }
@@ -134,10 +137,11 @@ server.on('request', async (req, res) => {
         })
         // This catches any errors that happen while creating the readable stream (usually invalid names)
         jsStream.on('error', (err) => {
+          console.log(err);
           // set the response to type to be text
           res.writeHead(404, { 'Content-Type': 'text/html' });
           // Send a suitable response
-          res.end();
+          res.end("Internal Server Error");
         });
 
       }
@@ -159,10 +163,11 @@ server.on('request', async (req, res) => {
         })
         // This catches any errors that happen while creating the readable stream (usually invalid names)
         pngStream.on('error', (err) => {
+          console.log(err);
           // set the response to type to be text
-          res.writeHead(404, { 'Content-Type': 'text/html' });
+          res.writeHead(500, { 'Content-Type': 'text/html' });
           // Send a suitable response
-          res.end();
+          res.end("Internal Server Error");
         });
 
       }
@@ -172,8 +177,9 @@ server.on('request', async (req, res) => {
       else if (req.url === '/signup') {
         fs.readFile(path.join(__dirname, './public/html/components/signup_1.html'), (err, data) => {
           if (err) {
+            console.log(err)
             res.writeHead(404, { 'Content-Type': 'text/html' })
-            res.end('404 Bad Gateway');
+            res.end('404 Bad Gateway : ' + String(req.url));
           } else {
             res.writeHead(200, { 'Content-Type': 'text/html' })
             res.end(data);
@@ -190,8 +196,9 @@ server.on('request', async (req, res) => {
         if (getLengthAlert(alert) == 0) {
           fs.readFile(path.join(__dirname, './public/html/components/signup_2.html'), (err, data) => {
             if (err) {
+              console.log(err);
               dataValid.confirm = true;
-              dataValid.data = '404 Bad Gateway';
+              dataValid.data = '404 Bad Gateway : ' + String(req.url);
               res.writeHead(404, { 'Content-Type': 'text/html' });
               res.end(JSON.stringify(dataValid));
             } else {
@@ -215,8 +222,9 @@ server.on('request', async (req, res) => {
       else if (req.url === '/getLoginForm') {
         fs.readFile(path.join(__dirname, './public/html/components/login.html'), (err, data) => {
           if (err) {
+            console.log(err)
             res.writeHead(404, { 'Content-Type': 'text/html' })
-            res.end('404 Bad Gateway');
+            res.end('404 Bad Gateway : ' + String(req.url));
           } else {
             res.writeHead(200, { 'Content-Type': 'text/html' })
             res.end(data);
@@ -287,6 +295,7 @@ server.on('request', async (req, res) => {
                     let user = docs[0];
                     fs.readFile(path.join(__dirname, './public/html/layouts/home_temp.html'), (err, data) => {
                       if (err) {
+                        console.log(err);
                         alert += '<p>404 Not Found!</p>';
                         dataValid.confirm = false;
                         dataValid.data = alert;
@@ -304,9 +313,19 @@ server.on('request', async (req, res) => {
                       }
                     })
                   }
+                  else if (err || docs.length == 0) {
+                    console.log(err);
+                    alert += docs;
+                    dataValid.confirm = false;
+                    dataValid.data = alert;
+                    console.log(alert);
+                    res.writeHead(301, { 'Content-type': 'text/html', 'Location': '/' });
+                    res.end();
+                  }
                 })
               }
               else if (err) {
+                console.log(err);
                 alert += '<p>Unexpected Error!</p>';
                 dataValid.confirm = false;
                 dataValid.data = alert;
@@ -316,7 +335,7 @@ server.on('request', async (req, res) => {
 
           } else {
             dataValid.confirm = false;
-            dataValid.data = '';
+            dataValid.data = 'Token Not Found! \n Try again after some time!';
             res.writeHead(301, { 'Content-type': 'text/html', 'Location': '/' });
             res.end();
           }
@@ -328,8 +347,9 @@ server.on('request', async (req, res) => {
 
         fs.readFile(path.join(__dirname, './public/html/components/forgot.html'), (err, data) => {
           if (err) {
+            console.log(err);
             res.writeHead(404, { 'Content-Type': 'text/html' });
-            res.end('404 Bad Gateway');
+            res.end('404 Bad Gateway : ' + String(req.url));
           } else {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.end(data);
@@ -380,13 +400,12 @@ server.on('request', async (req, res) => {
       }
 
       else if (req.url.startsWith('/resetPassword')) {
-
-
         const resetHTML = path.join(__dirname, '/public/html/pages/reset_password.html');
         fs.readFile(resetHTML, 'utf-8', (err, data) => {
           if (err) {
+            console.log(err);
             res.writeHead(404, { 'Content-Type': 'text/html' });
-            res.end('404 Bad Gateway');
+            res.end('404 Bad Gateway : ' + String(req.url));
           } else {
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.end(data);
@@ -410,15 +429,14 @@ server.on('request', async (req, res) => {
           fs.readFile(path.join(__dirname, './public/html/components/reset.html'), (err, dataHTML) => {
             if (err) {
               // send a response for invalid request
-              dataValid.confirm = false;
-              dataValid.data = '404 Bad Gateway'; 
+              console.log(err);
+              dataValid.data = '404 Bad Gateway : '+ String(req.url); 
               res.writeHead(404, { "Content-Type": 'text/html' });
               res.end(JSON.stringify(dataValid));
             }
             else {
               dataValid.confirm = true;
               dataValid.data = dataHTML.toString();
-              // send a response for invalid request
               res.writeHead(200, { "Content-Type": 'text/html' });
               res.end(JSON.stringify(dataValid));
             }
@@ -450,7 +468,7 @@ server.on('request', async (req, res) => {
         // set the response to type to be text
         res.writeHead(404, { "Content-Type": "text/html" });
         // end the respose with text
-        res.end("404 \n Invalid request");
+        res.end("400 \n Invalid request ==> " + String(req.url));
       }
     }
 
@@ -458,12 +476,10 @@ server.on('request', async (req, res) => {
     /// HANDLING POST REQUESTS
     else if (req.method === 'POST') {
 
+
       if (req.url == '/signupConfirm') {
-
-
         alert = '';
         let data = '';
-
         req.on('data', (chunk) => {
           data += chunk;
         });
@@ -501,7 +517,6 @@ server.on('request', async (req, res) => {
       }
 
       else if (req.url == '/signupComplete') {
-
         alert = '';
         let data = '';
         req.on('data', (chunk) => {
@@ -522,7 +537,6 @@ server.on('request', async (req, res) => {
               let passwordConfirm = dataJSON.passConfirm;
               let name = dataJSON.name.trim();
 
-
               if (name == '' || !name.match(nameRegex)) {
                 alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Enter a proper name! </p>'
                 res.end();
@@ -534,6 +548,8 @@ server.on('request', async (req, res) => {
                 // CREATE JWT AND STORE IT AS HTTP-COOKIE
                 jwt.sign({ userEmail: email }, process.env.JWT_SECRET, { expiresIn: 60 * 1000 }, async (err, token) => {
                   if (err) {
+                    console.log(err);
+                    alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Internal Server Error! \nTry again after some time!</p>'
                     res.end();
                   } else {
                     let cookies = new Cookies(req, res, { keys: [process.env.COOKIE_KEYS] });
@@ -547,7 +563,6 @@ server.on('request', async (req, res) => {
           }
           else {
             alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> New Accounts not allowed to register anymore! \nContact Admin for support</p>'
-            // console.log(alert);
             res.end();
           }
         })
@@ -584,6 +599,7 @@ server.on('request', async (req, res) => {
                 if (compare) {
                   jwt.sign({ userEmail: email }, process.env.JWT_SECRET, { expiresIn: 60 * 1000 }, (err, token) => {
                     if (err) {
+                      console.log(err);
                       alert += '<p>Unexpected error happened</p>';
                       alert += '<p>Please contact the admin</p>';
                       res.end();
@@ -594,14 +610,17 @@ server.on('request', async (req, res) => {
                     }
                   });
                 }
-
                 else if (!compare) {
                   alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Incorrect Email address or password!</p>';
                   alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> You can reset your password</p>';
                   res.end();
                 }
-
-
+              }
+              else if (err) {
+                console.log(err);
+                alert += '<p>Unexpected error happened</p>';
+                alert += '<p>Please contact the admin</p>';
+                res.end();
               }
               else {
                 alert += '<p> <strong class="u-fs-s u-color-danger"><strong class="u-fs-s u-color-danger">&#x26A0;</strong></strong> Sorry we could not find your account </p>';
@@ -634,6 +653,8 @@ server.on('request', async (req, res) => {
             // Check if email exists in DB and timesPassUpdated is less than 3
             userModel.find({ email }, async (err, docs) => {
               if (err || docs.length == 0) {
+                // Ternery operator to check if error or no account found
+                err ? console.log(err) : console.log('No account found');
                 alert += '<p><strong class="u-fs-s u-color-danger">&nbsp;&#x26A0;</strong>&nbsp;No account associated with Email address!</p>';
                 res.end();
               }
@@ -687,7 +708,6 @@ server.on('request', async (req, res) => {
                           alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Unexpected Error!</p>';
                           res.end();
                         });
-
                     }
                   })
                 }
@@ -706,6 +726,8 @@ server.on('request', async (req, res) => {
         req.on('end', () => {
           const urlString = data;
           const parsedUrl = new url.URL(urlString, `http://${req.headers.host}`);
+          // const parsedUrl = new url.URL(urlString, `${req.headers.host}`);
+
 
           const token = parsedUrl.searchParams.get('token');
           const email = parsedUrl.searchParams.get('email');
@@ -719,6 +741,7 @@ server.on('request', async (req, res) => {
             userModel.find({ email }, (err, docs) => {
               if (err || docs.length == 0) {
                 // send a response for invalid request
+                err ? console.log(err) : console.log('No account found');
                 alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Invalid Request!</p>';
                 res.end();
               }
@@ -734,6 +757,7 @@ server.on('request', async (req, res) => {
                     // send a response for invalid request
                     userModel.updateOne({ email }, { resetPass: '', resetPassExpires: '' }, (err, docs) => {
                       if (err) {
+                        console.log("MONGO ERROR: ", err);
                         alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Unexpected Error!</p>';
                         res.end();
                       }
@@ -762,15 +786,14 @@ server.on('request', async (req, res) => {
         req.on('data', (chunk) => {
           data += chunk;
         })
-
-
-
         req.on('end', () => {
           let dataJSON = JSON.parse(data);
           let password = dataJSON.pass;
           let passwordConfirm = dataJSON.passConfirm;
           const urlString = dataJSON.url;
           const parsedUrl = new url.URL(urlString, `http://${req.headers.host}`);
+          // const parsedUrl = new url.URL(urlString, `${req.headers.host}`);
+
 
           const token = parsedUrl.searchParams.get('token');
           const email = parsedUrl.searchParams.get('email');
@@ -800,6 +823,7 @@ server.on('request', async (req, res) => {
             userModel.find({ email }, async (err, docs) => {
               if (err || docs.length == 0) {
                 // send a response for invalid request
+                err ? console.log(err) : console.log('No account found');
                 alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Invalid Request!</p>';
                 res.end();
               }
@@ -814,19 +838,30 @@ server.on('request', async (req, res) => {
                     resetPassExpires = '';
                     userModel.updateOne({ email }, { password, passwordConfirm, resetPass, resetPassExpires }, (err, docs) => {
                       if (err) {
+                        console.log("MONGO ERROR: ", err);
                         alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Unexpected Error!</p>';
                         res.end();
                       }
                       else if (docs) {
+                        // Password Updated Successfully. No alert needed
                         res.end();
                       }
                     })
                   }
                   // else token expired
                   else {
-                    // send a response for invalid request
-                    alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Token Expired!</p>';
-                    res.end();
+                    userModel.updateOne({ email }, { resetPass: '', resetPassExpires: '' }, (err, docs) => { 
+                      if (err) {
+                        console.log("MONGO ERROR: ", err);
+                        alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Unexpected Error!</p>';
+                        res.end();
+                      }
+                      else if (docs) {
+                        alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Token Expired!</p>';
+                        alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Request new reset!</p>';
+                        res.end();
+                      }
+                    });
                   }
                 }
                 // Token is invalid or tampered
@@ -837,9 +872,6 @@ server.on('request', async (req, res) => {
               }
             })
           }
-
-
-
         })
       }
       ///
@@ -849,7 +881,7 @@ server.on('request', async (req, res) => {
     /// HANDLING UNKNOWN REQUESTS (PUT POST PATCH)
     else {
       res.writeHead(400, { 'Content-Type': 'text/plain' });
-      res.end("Unsupported Request");
+      res.end("400 ====> Unsupported Request at " + String(req.url));
     }
 
   });
