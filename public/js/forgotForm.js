@@ -1,9 +1,10 @@
+
 let forgotForm = document.getElementById('popupForgot');
 let resetPassBtn;
 
 
 // EVENT DELEGATION 
-document.body.addEventListener('click', function(event) {
+document.body.addEventListener('click', function (event) {
     if (event.target && event.target.id === 'forgotPopupBtn') {
         // console.log("Forgot Cliked")
         event.preventDefault();
@@ -12,7 +13,7 @@ document.body.addEventListener('click', function(event) {
         loginForm.style.visibility = 'hidden';
         loginForm.style.opacity = 0;
         loginForm.innerHTML = '';
-        
+
         forgotForm.style.visibility = 'visible';
         forgotForm.style.opacity = 1;
         forgotForm.innerHTML = '<div class="loader"></div>';
@@ -27,7 +28,7 @@ document.body.addEventListener('click', function(event) {
             forgotForm.innerHTML = '<div class="loader"></div>';
         }
 
-        xhttp.onload = function() {
+        xhttp.onload = function () {
             let forgotFormHTML = this.response;
             forgotForm.innerHTML = forgotFormHTML;
             forgotForm.style.visibility = 'visible';
@@ -36,7 +37,13 @@ document.body.addEventListener('click', function(event) {
             resetPassBtn = document.getElementById('forgotBtn');
             resetPassBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                sendForgotEmail(forgotFormHTML);
+                //
+                let emailInput = document.getElementById('emailInput').value;
+                forgotForm.style.visibility = 'visible';
+                forgotForm.style.opacity = 1;
+                forgotForm.innerHTML = '<div class="loader"></div>';
+                //
+                sendForgotEmail(forgotFormHTML, emailInput);
             })
 
 
@@ -48,15 +55,15 @@ document.body.addEventListener('click', function(event) {
 });
 
 
-function sendForgotEmail(forgotFormHTML) {
-    let email = document.getElementById('emailInput').value;
+function sendForgotEmail(forgotFormHTML, emailInput) {
+    let email = emailInput.trim();
     let formData = {
-        emailInput : email
+        emailInput: email
     }
     fetch('/resetConfirm', {
         method: 'POST',
         headers: {
-            'Content-Type' : 'application/json'
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData)
     }).then(response => {
@@ -76,10 +83,10 @@ function getResetToken(forgotFormHTML, formData) {
         forgotForm.innerHTML = '<div class="loader"></div>';
     }
 
-    xhttp.onload = function() {
+    xhttp.onload = function () {
         // console.log(this.response)
         let data = JSON.parse(this.response);
-        if (!data.confirm) {   
+        if (!data.confirm) {
             forgotForm.innerHTML = forgotFormHTML;
             forgotForm.style.visibility = 'visible';
             forgotForm.style.opacity = 1;
@@ -87,7 +94,13 @@ function getResetToken(forgotFormHTML, formData) {
             resetPassBtn = document.getElementById('forgotBtn');
             resetPassBtn.addEventListener('click', (e) => {
                 e.preventDefault();
-                sendForgotEmail(forgotFormHTML);
+                //
+                let emailInput = document.getElementById('emailInput').value;
+                forgotForm.style.visibility = 'visible';
+                forgotForm.style.opacity = 1;
+                forgotForm.innerHTML = '<div class="loader"></div>';
+                //
+                sendForgotEmail(forgotFormHTML, emailInput);
             })
 
 
@@ -107,7 +120,7 @@ function getResetToken(forgotFormHTML, formData) {
             fetch('/resetConfirm', {
                 method: 'POST',
                 headers: {
-                    'Content-Type' : 'application/json'
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(formData)
 
@@ -129,7 +142,7 @@ function displaySuccessAlert(data) {
         forgotForm.style.opacity = 1;
         forgotForm.innerHTML = '<div class="loader"></div>';
     }
-    xhttp.onload = function() {
+    xhttp.onload = function () {
         forgotForm.style.visibility = 'hidden';
         forgotForm.style.opacity = 0;
         forgotForm.innerHTML = '';
@@ -145,7 +158,7 @@ function displaySuccessAlert(data) {
             alertBox.classList.remove('success-alert');
             alertBox.style.visibility = 'hidden';
             alertBox.style.animation = '';
-            
+
         }, 10000);
     }
     xhttp.send();

@@ -634,7 +634,7 @@ server.on('request', async (req, res) => {
             // Check if email exists in DB and timesPassUpdated is less than 3
             userModel.find({ email }, async (err, docs) => {
               if (err || docs.length == 0) {
-                alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>No account associated Email address not found!</p>';
+                alert += '<p><strong class="u-fs-s u-color-danger">&nbsp;&#x26A0;</strong>&nbsp;No account associated with Email address!</p>';
                 res.end();
               }
               else if (docs.length > 0) {

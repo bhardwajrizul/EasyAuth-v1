@@ -25,12 +25,14 @@ fetch('/checkResetUrl', {
                 setTimeout(() => {
                     alertBox.style.visibility = 'hidden';
                     alertBox.style.animation = '';
-                    window.location = '/';
+                    //  show a button inside reset form to redirect to home page
+                    resetForm.innerHTML = '<a href="/" class="u-float-none u-center signup-pop-btn">Go to Home Page</a>';
                 }, 5000);
             } else {
+                let resetHTML = data.data;
                 resetForm.style.visibility = 'visible';
                 resetForm.style.opacity = 1;
-                resetForm.innerHTML = data.data;
+                resetForm.innerHTML = resetHTML;
                 let resetBtn = document.getElementById('resetBtn');
                 resetBtn.addEventListener('click', () => {
                     resetPsswd();
@@ -41,6 +43,7 @@ fetch('/checkResetUrl', {
     }
 
 }).catch((err) => {
+    console.log(err);
     alertBox.innerHTML = "Something went wrong. Please try again later.";
     alertBox.style.visibility = 'visible';
     alertBox.style.animation = 'showAlertLeft 5s ease-in-out';
@@ -69,7 +72,8 @@ function resetPsswd() {
             displaySuccessAlert();
         }
     }).catch((err) => {
-        alertBox.innerHTML = err;
+        console.log(err);
+        alertBox.innerHTML = "Something went wrong. Please try again later.";
         alertBox.style.visibility = 'visible';
         alertBox.style.animation = 'showAlertLeft 5s ease-in-out';
         setTimeout(() => {
@@ -99,14 +103,14 @@ function displaySuccessAlert() {
             setTimeout(() => {
                 alertBox.style.visibility = 'hidden';
                 alertBox.style.animation = '';
-                window.location = '/';
+                window.location = window.location.href;
             }, 5000);
         } else {
             alertBox.innerHTML = data.data;
             // ADD CLASS success-alert to alertbox
             alertBox.classList.add('success-alert');
             alertBox.style.visibility = 'visible';
-            alertBox.style.animation = 'showAlertLeft 10s ease-in-out';
+            alertBox.style.animation = 'showAlertLeft 5s ease-in-out';
             setTimeout(() => {
                 // Remove class 
                 alertBox.classList.remove('success-alert');
