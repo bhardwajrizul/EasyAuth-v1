@@ -732,8 +732,17 @@ server.on('request', async (req, res) => {
                   // else token expired
                   else {
                     // send a response for invalid request
-                    alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Token Expired!</p>';
-                    res.end();
+                    userModel.updateOne({ email }, { resetPass: '', resetPassExpires: '' }, (err, docs) => {
+                      if (err) {
+                        alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Unexpected Error!</p>';
+                        res.end();
+                      }
+                      else if (docs) {
+                        alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Token Expired!</p>';
+                        alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong>Request new reset!</p>';
+                        res.end();
+                      }
+                    });
                   }
                 }
                 // Token is invalid or tampered
