@@ -102,7 +102,7 @@ NODE_ENV=production node server.js
 ```
 
 * Server is hosted at [http://127.0.0.1:3000](http://127.0.0.1:3000) (can be changed in `server.js`) 
-* CSS can be changed in `styles.css`r by modifying the SASS files
+* CSS can be changed in `styles.css` by modifying the SASS files
 
 ***
 
@@ -116,7 +116,7 @@ For major changes, please open an issue first to discuss what you would like to 
 >  **Important Notice** : Read before using the application
 
 >This is a personal project which I started with the intent of learning how authentication and authorization works. 
-This by no means provides complete authentication or authorization and such services should never be implemented on your own. The application has many buys and unresolved issues! 
+This by no means provides complete authentication or authorization and such services should never be implemented on your own. The application might have bugs and unresolved issues! 
 
 ***
 ## License
