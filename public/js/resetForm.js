@@ -1,5 +1,6 @@
 let resetForm = document.getElementById('resetForm');
-let alertBox = document.getElementById('alert');
+let alertBox = document.getElementById('alert-box');
+let errArr = [];
 
 fetch('/checkResetUrl', {
     method: 'POST',
@@ -19,13 +20,10 @@ fetch('/checkResetUrl', {
         xhttp.onload = function () {
             let data = JSON.parse(this.response);
             if (!data.confirm) {
-                alertBox.innerHTML = data.data;
-                alertBox.style.visibility = 'visible';
-                alertBox.style.animation = 'showAlertLeft 5s ease-in-out';
+                
+                createAndDisplayAlert(alertBox, data.data)
+
                 setTimeout(() => {
-                    alertBox.style.visibility = 'hidden';
-                    alertBox.style.animation = '';
-                    //  show a button inside reset form to redirect to home page
                     resetForm.innerHTML = '<a href="/" class="u-float-none u-center signup-pop-btn">Go to Home Page</a>';
                 }, 5000);
             } else {
@@ -44,12 +42,9 @@ fetch('/checkResetUrl', {
 
 }).catch((err) => {
     console.log(err);
-    alertBox.innerHTML = "Something went wrong. Please try again later.";
-    alertBox.style.visibility = 'visible';
-    alertBox.style.animation = 'showAlertLeft 5s ease-in-out';
+    let alertData = "Something went wrong. Please try again later.";
+    createAndDisplayAlert(alertBox, alertData)
     setTimeout(() => {
-        alertBox.style.visibility = 'hidden';
-        alertBox.style.animation = '';
         window.location = '/';
     }, 5000);
 });
@@ -73,12 +68,9 @@ function resetPsswd() {
         }
     }).catch((err) => {
         console.log(err);
-        alertBox.innerHTML = "Something went wrong. Please try again later.";
-        alertBox.style.visibility = 'visible';
-        alertBox.style.animation = 'showAlertLeft 5s ease-in-out';
+        let alertData = "Something went wrong. Please try again later.";
+        createAndDisplayAlert(alertBox, alertData)
         setTimeout(() => {
-            alertBox.style.visibility = 'hidden';
-            alertBox.style.animation = '';
             window.location = '/';
         }, 5000);
     });
@@ -94,31 +86,54 @@ function displaySuccessAlert() {
         resetForm.innerHTML = '<div class="loader"></div>';
     }
     xhttp.onload = function () {
-        let alertBox = document.getElementById('alert');
+        let alertBox = document.getElementById('alert-box');
         let data = JSON.parse(this.response);
         if (!data.confirm) {
-            alertBox.innerHTML = data.data;
-            alertBox.style.visibility = 'visible';
-            alertBox.style.animation = 'showAlertLeft 5s ease-in-out';
+            createAndDisplayAlert(alertBox, data.data)
             setTimeout(() => {
-                alertBox.style.visibility = 'hidden';
-                alertBox.style.animation = '';
                 window.location = window.location.href;
             }, 5000);
         } else {
-            alertBox.innerHTML = data.data;
-            // ADD CLASS success-alert to alertbox
-            alertBox.classList.add('success-alert');
-            alertBox.style.visibility = 'visible';
-            alertBox.style.animation = 'showAlertLeft 5s ease-in-out';
+            createSuccessAlert(alertBox, data.data)
             setTimeout(() => {
-                // Remove class 
-                alertBox.classList.remove('success-alert');
-                alertBox.style.visibility = 'hidden';
-                alertBox.style.animation = '';
                 window.location = '/';
             }, 5000);
         }
     }
     xhttp.send();
+}
+
+function createAndDisplayAlert(alertContainer, alertData) {
+    let alert = document.createElement('div');
+    alertContainer.appendChild(alert);
+    alert.innerHTML = alertData;
+    alert.id = 'alert';
+    alert.classList.add("alert", "danger-alert")
+    alert.style.visibility = 'visible';
+    alert.style.animation = 'showAlertLeft 5s ease-in-out';
+
+    errArr.unshift(alert);
+    errArr.map((currentAlert, index) => {
+        currentAlert.style.top = (index * 100) + "px";
+    })
+
+    setTimeout(() => {
+        alertContainer.removeChild(alert)
+        errArr.pop();
+    }, 5000);
+}
+
+function createSuccessAlert(alertContainer, alertData) {
+
+    let alert = document.createElement('div');
+    alertContainer.appendChild(alert);
+    alert.innerHTML = alertData;
+    alert.id = 'alert';
+    alert.classList.add("alert", "success-alert")
+    alert.style.visibility = 'visible';
+    alert.style.animation = 'showAlertLeft 5s ease-in-out';
+
+    setTimeout(() => {
+        alertContainer.removeChild(alert);
+    }, 5000)
 }

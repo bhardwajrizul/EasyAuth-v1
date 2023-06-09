@@ -48,12 +48,12 @@ const nameRegex = /^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/;
 
 // Global Variables
 let alert = '';
-const maxUsers = 15;
-const maxRequests = 300;
+const maxUsers = 40;
+const maxRequests = 100;
 const maxResetLimit = 3;
 const validFor = 5 * 60 * 1000;
 const oneMinute = 60 * 1000;
-const handleRateLimit = rateLimit(maxRequests, 60 * 1000); // 300 requests per minute
+const handleRateLimit = rateLimit(maxRequests, 60 * 1000); // 100 requests per minute
 
 
 
@@ -213,6 +213,11 @@ server.on('request', async (req, res) => {
           // THERE IS ALERT PRESENT
           dataValid.confirm = false;
           dataValid.data = alert;
+
+          // Reset Token so there is no error while if user was already logged in
+          let cookies = new Cookies(req, res, { keys: [process.env.COOKIE_KEYS] });
+          cookies.set(process.env.COOKIE_NAME, '', { sameSite: 'lax', overwrite: true });
+
           res.writeHead(200, { 'Content-Type': 'text/html' });
           res.end(JSON.stringify(dataValid));
         }
@@ -277,7 +282,7 @@ server.on('request', async (req, res) => {
         if (getLengthAlert(alert) > 0) {
           dataValid.confirm = false;
           dataValid.data = alert;
-          res.writeHead(200, { 'Content-Type': 'text/html' });
+          res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify(dataValid));
         }
         // THERE IS NO ALERT
@@ -468,7 +473,7 @@ server.on('request', async (req, res) => {
         // set the response to type to be text
         res.writeHead(404, { "Content-Type": "text/html" });
         // end the respose with text
-        res.end("400 \n Invalid request ==> " + String(req.url));
+        res.end("404 \n Invalid request ==> " + String(req.url));
       }
     }
 
@@ -502,7 +507,7 @@ server.on('request', async (req, res) => {
               alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Enter Proper Email Address </p>';
               res.end();
             }
-            if (pass == '' || pass.length < 8 || pass.length > 15) {
+            else if (pass == '' || pass.length < 8 || pass.length > 15) {
               alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Password length must be between 8 & 15 characters</p>';
               res.end();
             }
@@ -661,8 +666,8 @@ server.on('request', async (req, res) => {
               else if (docs.length > 0) {
                 // if timesPassUpdated is greater than 3 then don't allow user to reset password and send an alert to contact admin
                 if (docs[0].timesPassUpdated >= maxResetLimit) {
-                  alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> You have exceeded the maximum number of password reset attempts!</p>';
-                  alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> Please contact the admin for further assistance</p>';
+                  alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> No more password resets allowed! </p>';
+                  alert += '<p><strong class="u-fs-s u-color-danger">&#x26A0;</strong> 📞 Contact Admin </p>';
                   res.end();
                 }
                 // SEND EMAIL

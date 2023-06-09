@@ -1,10 +1,11 @@
 let signupPopupBtn = document.getElementById('signupPopupBtn');
 let signupForm = document.getElementById('popupSignup');
-let alertBox = document.getElementById('alert');
+let alertBox = document.getElementById('alert-box');
 let nextSignUpBtn;
 let signUpBtn;
 let prevSignUpBtn;
 let closeSignupPopupBtn;
+let errArr = [];
 
 signupPopupBtn.addEventListener('click', loadSignupPopup);
 
@@ -107,13 +108,8 @@ async function nextBtnClicked(e) {
                 closeSignupPopupBtn = document.getElementById('closeSignupBtn');
                 closeSignupPopupBtn.addEventListener('click', closeSignupPopup);
 
-                alertBox.innerHTML = data.data;
-                alertBox.style.visibility = 'visible';
-                alertBox.style.animation = 'showAlertLeft 5s ease-in-out';
-                setTimeout(() => {
-                    alertBox.style.visibility = 'hidden';
-                    alertBox.style.animation = '';
-                }, 5000);
+                createAndDisplayAlert(alertBox, data.data)
+
             }
         }
         xhttp.send();   
@@ -223,13 +219,7 @@ function getHomePage() {
             prevSignUpBtn = document.getElementById('prevSignupBtn');
             prevSignUpBtn.addEventListener('click', loadPrevPage);
 
-            alertBox.innerHTML = data.data;
-            alertBox.style.visibility = 'visible';
-            alertBox.style.animation = 'showAlertLeft 5s ease-in-out';
-            setTimeout(() => {
-                alertBox.style.visibility = 'hidden';
-                alertBox.style.animation = '';
-            }, 5000);
+            createAndDisplayAlert(alertBox, data.data);
 
             
         } catch (error) {
@@ -243,3 +233,22 @@ function getHomePage() {
     xhttp.send();
 }
 
+function createAndDisplayAlert(alertContainer, alertData) {
+    let alert = document.createElement('div');
+    alertContainer.appendChild(alert);
+    alert.innerHTML = alertData;
+    alert.id = 'alert';
+    alert.classList.add("alert", "danger-alert")
+    alert.style.visibility = 'visible';
+    alert.style.animation = 'showAlertLeft 5s ease-in-out';
+
+    errArr.unshift(alert);
+    errArr.map((currentAlert, index) => {
+        currentAlert.style.top = (index * 100) + "px";
+    })
+
+    setTimeout(() => {
+        alertContainer.removeChild(alert)
+        errArr.pop();
+    }, 5000);
+}

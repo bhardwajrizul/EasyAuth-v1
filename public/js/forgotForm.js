@@ -107,14 +107,9 @@ function getResetToken(forgotFormHTML, formData) {
             let closeForgotBtn = document.getElementById('closeForgotBtn');
             closeForgotBtn.addEventListener('click', closeForgotPopUp);
 
-            let alertBox = document.getElementById('alert');
-            alertBox.innerHTML = data.data;
-            alertBox.style.visibility = 'visible';
-            alertBox.style.animation = 'showAlertLeft 5s ease-in-out';
-            setTimeout(() => {
-                alertBox.style.visibility = 'hidden';
-                alertBox.style.animation = '';
-            }, 5000);
+            let alertBox = document.getElementById('alert-box');
+            createAndDisplayAlert(alertBox, data.data);
+
         }
         else if (data.confirm) {
             fetch('/resetConfirm', {
@@ -147,19 +142,8 @@ function displaySuccessAlert(data) {
         forgotForm.style.opacity = 0;
         forgotForm.innerHTML = '';
 
-        let alertBox = document.getElementById('alert');
-        alertBox.innerHTML = data.data;
-        // ADD CLASS success-alert to alertbox
-        alertBox.classList.add('success-alert');
-        alertBox.style.visibility = 'visible';
-        alertBox.style.animation = 'showAlertLeft 10s ease-in-out';
-        setTimeout(() => {
-            // Remove class 
-            alertBox.classList.remove('success-alert');
-            alertBox.style.visibility = 'hidden';
-            alertBox.style.animation = '';
-
-        }, 10000);
+        let alertBox = document.getElementById('alert-box');
+        createSuccessAlert(alertBox, data.data)
     }
     xhttp.send();
 }
@@ -169,4 +153,40 @@ function closeForgotPopUp(e) {
     forgotForm.style.visibility = 'hidden';
     forgotForm.style.opacity = 0;
     forgotForm.innerHTML = '';
+}
+
+
+function createAndDisplayAlert(alertContainer, alertData) {
+    let alert = document.createElement('div');
+    alertContainer.appendChild(alert);
+    alert.innerHTML = alertData;
+    alert.id = 'alert';
+    alert.classList.add("alert", "danger-alert")
+    alert.style.visibility = 'visible';
+    alert.style.animation = 'showAlertLeft 5s ease-in-out';
+
+    errArr.unshift(alert);
+    errArr.map((currentAlert, index) => {
+        currentAlert.style.top = (index * 100) + "px";
+    })
+
+    setTimeout(() => {
+        alertContainer.removeChild(alert)
+        errArr.pop();
+    }, 5000);
+}
+
+function createSuccessAlert(alertContainer, alertData) {
+
+    let alert = document.createElement('div');
+    alertContainer.appendChild(alert);
+    alert.innerHTML = alertData;
+    alert.id = 'alert';
+    alert.classList.add("alert", "success-alert")
+    alert.style.visibility = 'visible';
+    alert.style.animation = 'showAlertLeft 12s ease-in-out';
+
+    setTimeout(() => {
+        alertContainer.removeChild(alert);
+    }, 12000)
 }
