@@ -49,7 +49,7 @@ const nameRegex = /^[A-Za-z]+((\s)?((\'|\-|\.)?([A-Za-z])+))*$/;
 // Global Variables
 let alert = '';
 const maxUsers = 40;
-const maxRequests = 100;
+const maxRequests = 300;
 const maxResetLimit = 3;
 const validFor = 5 * 60 * 1000;
 const oneMinute = 60 * 1000;
